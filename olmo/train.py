@@ -1,4 +1,3 @@
-# This is a test commit!
 
 from __future__ import annotations
 
@@ -759,10 +758,20 @@ class Trainer:
         return ce_loss, z_loss, logits
 
     def train_micro_batch(
-        self, micro_batch: Dict[str, Any], batch_size_in_tokens: int
+        self, micro_batch: Dict[str, Any], 
+        batch_size_in_tokens: int,
+        micro_batch_idx: int,
+        apply_noise: bool
     ) -> Tuple[torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
         ce_loss, z_loss, logits = self.model_forward(
-            micro_batch, compute_z_loss=self.cfg.softmax_auxiliary_loss, loss_reduction="sum"
+            micro_batch, 
+            compute_z_loss=self.cfg.softmax_auxiliary_loss, 
+            loss_reduction="sum",
+            # MP: adjusted forward pass to include micro-batch index and apply noise
+            micro_batch_idx=micro_batch_idx,
+            apply_noise=apply_noise,
+            seed_offset=self.cfg.global_train_batch_size + self.cfg.device_train_microbatch_size
+            # MP : end
         )
         ce_loss = ce_loss / batch_size_in_tokens
 
@@ -781,7 +790,9 @@ class Trainer:
 
         return loss, ce_loss, z_loss
 
-    def train_batch(self, batch: Dict[str, Any]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
+    def train_batch(self, batch: Dict[str, Any], apply_noise: bool) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
+        ## MP: adjusted train batch to include apply_noise parameter as well as micro-batch index
+        
         # Split into micro-batches.
         micro_batches = self.split_batch(batch)
         batch_size_in_tokens = batch["input_ids"].numel()
@@ -812,7 +823,12 @@ class Trainer:
                 autocast_device = "mps" if self.device.type == "mps" else "cuda"
                 with torch.autocast(autocast_device, enabled=True, dtype=self.cfg.autocast_precision):
                     # Run forward pass.
-                    loss, ce_loss, z_loss = self.train_micro_batch(micro_batch, batch_size_in_tokens)
+                    loss, ce_loss, z_loss = self.train_micro_batch(
+                        micro_batch, 
+                        batch_size_in_tokens,
+                        micro_batch_idx=micro_batch_idx,
+                        apply_noise=apply_noise
+                    )
 
                     # Update overall CE batch loss.
                     ce_batch_loss += ce_loss.detach()
@@ -831,7 +847,9 @@ class Trainer:
 
         return ce_batch_loss, z_batch_loss
 
-    def train_step(self, batch: Dict[str, Any], reduce_global_loss: bool = True) -> Dict[str, float]:
+    def train_step(self, batch: Dict[str, Any], apply_noise: bool, reduce_global_loss: bool = True) -> Dict[str, float]:
+        # MP: adjusted train step to include apply_noise parameter
+        
         metrics: Dict[str, float] = {}
 
         # Write data-indices to file.
@@ -850,7 +868,7 @@ class Trainer:
         batch = move_to_device(batch, self.device)
 
         # Run forward-backward pass.
-        ce_batch_loss, z_batch_loss = self.train_batch(batch)
+        ce_batch_loss, z_batch_loss = self.train_batch(batch, apply_noise)
 
         # Collect loss, potentially reducing over all ranks.
         if reduce_global_loss:
@@ -1108,7 +1126,9 @@ class Trainer:
 
         return run_canceled, extra_steps
 
-    def fit(self):
+    def fit(self, batches_to_noise: list = []) -> None:
+        # MP: adjusted fit method to include batches_to_noise list
+
         if self.cfg.stop_after is not None:
             if self.cfg.stop_at is None:
                 self.cfg.stop_at = self.global_step + self.cfg.stop_after
@@ -1197,7 +1217,7 @@ class Trainer:
 
         with torch_profiler as p:
             for epoch in range(self.epoch or 0, self.max_epochs):
-                for batch in self.train_loader:
+                for batch_id, batch in enumerate(self.train_loader):
                     # Bookkeeping.
                     # NOTE: To track the global batch size / number of tokens per batch we make the assumption that all
                     # batches see the same number of tokens, which should be the case for language model pre-training
@@ -1225,7 +1245,12 @@ class Trainer:
                     should_log_this_step = self.should_log_this_step()
 
                     # Run train step on batch.
-                    metrics = self.train_step(batch, reduce_global_loss=should_log_this_step)
+                    # MP adjusted train step to include apply_noise parameter
+                    metrics = self.train_step(
+                        batch,
+                        apply_noise=batch_id in batches_to_noise,
+                        reduce_global_loss=should_log_this_step
+                        )
 
                     # Maybe collect other metrics.
                     if should_log_this_step:
