@@ -2,6 +2,9 @@ run_name: OLMo-1B
 seed: 6198
 dry_run: false
 
+# which batches we apply Gaussian noise to
+batches_to_noise: [0, 1]
+
 wandb:
   name: ${run_name}
   project: olmo-small

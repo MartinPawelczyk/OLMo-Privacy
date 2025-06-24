@@ -26,7 +26,7 @@ from olmo.config import (
 from olmo.data import build_train_dataloader
 from olmo.eval import build_evaluators
 from olmo.exceptions import OLMoCliError, OLMoConfigurationError
-from olmo.model import OLMo
+from olmo.model import OLMo, OLMoWithNoise
 from olmo.optim import BoltOnWarmupScheduler, build_optimizer, build_scheduler
 from olmo.torch_util import (
     SingleAccelerator,
@@ -137,7 +137,7 @@ def main(cfg: TrainConfig) -> None:
 
     # Initialize the model.
     log.info("Building model...")
-    olmo_model = OLMo(cfg.model)
+    olmo_model = OLMoWithNoise(cfg.model)
     log.info(f"Total number of parameters: {olmo_model.num_params():,d}")
     log.info(f"Number of non-embedding parameters: {olmo_model.num_params(include_embedding=False):,d}")
     log.info(f"Peak GPU Memory (MB) before {cfg.distributed_strategy}: {int(peak_gpu_memory() or 0)}")
@@ -373,7 +373,7 @@ def main(cfg: TrainConfig) -> None:
 
         if not cfg.dry_run:
             log.info("Starting training...")
-            trainer.fit()
+            trainer.fit(batches_to_noise=cfg.batches_to_noise)
             log.info("Training complete")
         else:
             log.info("Dry run complete")
