@@ -1876,3 +1876,234 @@ class OLMo(nn.Module):
             og_keys_to_new[og_key].add(new_key)
 
         return state_dict, og_keys_to_new
+
+
+class OLMoWithNoise(OLMo):
+    def __init__(self, noise_std: float = 1e-3, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.noise_std = noise_std
+
+    def forward(
+            self,
+            input_ids: torch.LongTensor,
+            input_embeddings: Optional[torch.FloatTensor] = None,
+            attention_mask: Optional[torch.Tensor] = None,
+            attention_bias: Optional[torch.Tensor] = None,
+            past_key_values: Optional[Sequence[Tuple[torch.Tensor, torch.Tensor]]] = None,
+            use_cache: bool = False,
+            last_logits_only: bool = False,
+            # MP: Gaussian noise parameters beginning
+            micro_batch_idx: Optional[int] = None,
+            apply_noise: bool = False,
+            seed_offset: int = 0,
+            # MP: Gaussian noise parameters end
+            output_hidden_states: Optional[bool] = None,
+            doc_lens: Optional[torch.Tensor] = None,
+            max_doc_lens: Optional[Sequence[int]] = None,
+        ) -> OLMoOutput:
+            """
+            :param input_ids: A tensor of shape `(batch_size, seq_len)`.
+            :param input_embeddings: A tensor of shape `(batch_size, seq_len, d_model)` with input
+                embeddings. When provided, it is treated as the output of the input embedding layer.
+            :param attention_mask: A tensor of shape `(batch_size, seq_len)` that indicates
+                which input IDs are masked. A `1` value in the mask means that
+                the corresponding input ID should *not* be ignored. A `0` means
+                that the corresponding input ID is masked.
+
+                This has the same meaning as the `attention_mask` in HuggingFace's `transformers`
+                library.
+            :param attention_bias: A tensor of shape `(batch_size, 1, seq_len, seq_len)`,
+                `(1, 1, seq_len, seq_len)`, or `(seq_len, seq_len)`. This is used
+                to introduce causal or other biases.
+
+                If the tensor is a bool or byte tensor, a `True` or `1` at `attention_bias[:, :, i, j]`
+                indicates that the i-th element in the sequence is allowed to attend to the j-th
+                element in the sequence.
+
+                If the tensor is a float tensor, it will just be added to the attention
+                scores before the softmax.
+
+                The default is causal, which corresponds to a lower-diagonal byte matrix of ones.
+            :param past_key_values: Pre-computed keys and values for each attention block.
+                Can be used to speed up sequential decoding. The `input_ids` which have
+                their past given to this model should not be passed as `input_ids` as they have already been computed.
+            :param use_cache: If `True`, return key and value tensors for each block.
+            :param last_logits_only: If `True`, only compute the logits for the last token of each sequence.
+                This can speed up decoding when you only care about the next token.
+            :param doc_lens: Document lengths to use in attention for intra-document masking.
+                Shape `(batch_size, max_docs)`.
+            :param max_doc_lens: Maximum document length for each instance in the batch.
+            """
+            output_hidden_states = output_hidden_states if output_hidden_states is not None else False
+
+            if past_key_values:
+                assert len(past_key_values) == self.config.n_layers
+
+            batch_size, seq_len = input_ids.size() if input_embeddings is None else input_embeddings.size()[:2]
+            if past_key_values is None:
+                past_length = 0
+            else:
+                past_length = past_key_values[0][0].size(-2)
+
+            max_doc_len: Optional[int] = None
+            cu_doc_lens: Optional[torch.Tensor] = None
+            if doc_lens is not None and max_doc_lens is not None:
+                max_doc_len = max(max_doc_lens)
+                cu_doc_lens = get_cumulative_document_lengths(doc_lens)
+
+            # Get embeddings of input.
+            # shape: (batch_size, seq_len, d_model)
+            x = self.transformer.wte(input_ids) if input_embeddings is None else input_embeddings  # type: ignore
+
+            # Add Gaussian noise to the input embeddings.
+            if apply_noise:
+                torch.manual_seed(seed_offset + micro_batch_idx)
+                noise = torch.randn_like(x) * self.noise_std
+                x = x + noise
+
+            # Apply embedding layer norm.
+            if self.config.embedding_layer_norm:
+                x = self.transformer.emb_norm(x)
+
+            if not (self.config.alibi or self.config.rope):
+                # Get positional embeddings.
+                # shape: (1, seq_len)
+                pos = torch.arange(past_length, past_length + seq_len, dtype=torch.long, device=x.device).unsqueeze(0)
+                # shape: (1, seq_len, d_model)
+                pos_emb = self.transformer.wpe(pos)  # type: ignore
+                x = pos_emb + x
+
+            # Apply dropout.
+            # shape: (batch_size, seq_len, d_model)
+            x = self.transformer.emb_drop(x)  # type: ignore
+
+            # Transform the attention mask into what the blocks expect.
+            if attention_mask is not None:
+                # shape: (batch_size, 1, 1, seq_len)
+                attention_mask = attention_mask.to(dtype=torch.float).view(batch_size, -1)[:, None, None, :]
+                attention_mask = (1.0 - attention_mask) * torch.finfo(attention_mask.dtype).min
+
+            # Merge attention mask with attention bias.
+            if (
+                attention_bias is not None
+                or attention_mask is not None
+                or self.config.alibi
+                # NOTE (epwalsh): we need to initialize the attn bias in order for attn to work properly
+                # with key+value cache. Otherwise `F.scaled_dot_product_attention()` doesn't seem to compute
+                # scores correctly.
+                or past_key_values is not None
+            ):
+                if attention_bias is None and self.config.alibi:
+                    attention_bias = get_causal_attention_bias(
+                        self.__cache, past_length + seq_len, x.device
+                    ) + self.get_alibi_attention_bias(past_length + seq_len, x.device)
+                elif attention_bias is None:
+                    attention_bias = get_causal_attention_bias(self.__cache, past_length + seq_len, x.device)
+                elif attention_bias.dtype in (torch.int8, torch.bool):
+                    attention_bias = attention_bias.to(dtype=torch.float)
+                    attention_bias.masked_fill_(attention_bias == 0.0, torch.finfo(attention_bias.dtype).min)
+
+                # Transform to the right shape and data type.
+                mask_len = seq_len
+                if attention_mask is not None:
+                    mask_len = attention_mask.shape[-1]
+                elif past_key_values is not None:
+                    mask_len = past_key_values[0][0].shape[-2] + seq_len
+                attention_bias = attention_bias[:, :, :mask_len, :mask_len].to(dtype=torch.float)
+
+                # Add in the masking bias.
+                if attention_mask is not None:
+                    attention_bias = attention_bias + attention_mask
+                    # Might get -infs after adding attention mask, since dtype.min + dtype.min = -inf.
+                    # `F.scaled_dot_product_attention()` doesn't handle -inf like you'd expect, instead
+                    # it can produce NaNs.
+                    ensure_finite_(attention_bias, check_neg_inf=True, check_pos_inf=False)
+
+            attn_key_values: Optional[List[Tuple[torch.Tensor, torch.Tensor]]] = [] if use_cache else None
+
+            # decoder layers
+            all_hidden_states = []
+
+            # Apply blocks one-by-one.
+            if self.config.block_group_size == 1:
+                for block_idx, block in enumerate(self.transformer.blocks):
+                    if output_hidden_states:
+                        # add hidden states
+                        all_hidden_states.append(x)
+
+                    layer_past = None if past_key_values is None else past_key_values[block_idx]
+                    if should_checkpoint_block(self.activation_checkpointing_strategy, block_idx):
+                        # shape: (batch_size, seq_len, d_model)
+                        x, cache = self._activation_checkpoint_fn(
+                            block,
+                            x,
+                            attention_bias=attention_bias,
+                            layer_past=layer_past,
+                            use_cache=use_cache,
+                            max_doc_len=max_doc_len,
+                            cu_doc_lens=cu_doc_lens,
+                        )
+                    else:
+                        # shape: (batch_size, seq_len, d_model)
+                        x, cache = block(
+                            x,
+                            attention_bias=attention_bias,
+                            layer_past=layer_past,
+                            use_cache=use_cache,
+                            max_doc_len=max_doc_len,
+                            cu_doc_lens=cu_doc_lens,
+                        )
+
+                    if attn_key_values is not None:
+                        assert cache is not None
+                        attn_key_values.append(cache)
+            else:
+                for group_idx, block_group in enumerate(self.transformer.block_groups):
+                    if output_hidden_states:
+                        # add hidden states
+                        all_hidden_states.append(x)
+
+                    layers_past = (
+                        None
+                        if past_key_values is None
+                        else past_key_values[
+                            group_idx * self.config.block_group_size : (group_idx + 1) * self.config.block_group_size
+                        ]
+                    )
+                    x, cache = block_group(
+                        x,
+                        attention_bias=attention_bias,
+                        layers_past=layers_past,
+                        use_cache=use_cache,
+                        max_doc_len=max_doc_len,
+                        cu_doc_lens=cu_doc_lens,
+                    )
+                    if attn_key_values is not None:
+                        assert cache is not None
+                        attn_key_values.extend(cache)
+
+            if last_logits_only:
+                # shape: (batch_size, 1, d_model)
+                x = x[:, -1, :].unsqueeze(1)
+
+            # Apply final layer norm.
+            # shape: (batch_size, seq_len or 1, d_model)
+            x = self.transformer.ln_f(x)  # type: ignore
+            if output_hidden_states:
+                # add final hidden state post-final-layernorm, following HuggingFace's convention
+                all_hidden_states.append(x)
+
+            # Get logits.
+            # shape: (batch_size, seq_len or 1, vocab_size)
+            if self.config.weight_tying:
+                logits = F.linear(x, self.transformer.wte.weight, None)  # type: ignore
+            else:
+                logits = self.transformer.ff_out(x)  # type: ignore
+            if self.config.scale_logits:
+                logits.mul_(1 / math.sqrt(self.config.d_model))
+
+            return OLMoOutput(
+                logits=logits,
+                attn_key_values=attn_key_values,
+                hidden_states=tuple(all_hidden_states) if output_hidden_states else None,
+            )
