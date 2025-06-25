@@ -730,7 +730,13 @@ class Trainer:
         return labels[..., 1:].contiguous()
 
     def model_forward(
-        self, batch: Dict[str, Any], loss_reduction: str = "mean", compute_z_loss: bool = False
+        self, 
+        batch: Dict[str, Any], 
+        loss_reduction: str = "mean", 
+        compute_z_loss: bool = False,
+        micro_batch_idx: Optional[int] = None,
+        apply_noise: bool = False,
+        seed_offset: int = 0
     ) -> Tuple[torch.Tensor, Optional[torch.Tensor], torch.Tensor]:
         # shape: (batch_size, seq_len, vocab_size)
         logits = self.dist_model(
@@ -739,6 +745,10 @@ class Trainer:
             attention_bias=batch.get("attention_bias"),
             doc_lens=batch.get("doc_lens"),
             max_doc_lens=batch.get("max_doc_lens"),
+            # MP: added micro-batch index & apply noise
+            micro_batch_idx=micro_batch_idx,
+            apply_noise=apply_noise,
+            seed_offset=seed_offset
         ).logits
         logits_for_loss = logits[..., :-1, :].contiguous()
         # shape: (batch_size * seq_len, vocab_size)

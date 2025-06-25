@@ -1151,6 +1151,11 @@ class OLMo(nn.Module):
             get_causal_attention_bias(self.__cache, config.max_sequence_length, _non_meta_init_device(config))
             self.get_alibi_attention_bias(config.max_sequence_length, _non_meta_init_device(config))
 
+        # MP: Add noise std and batches_to_noise
+        self.noise_std = config.noise_std
+
+    @property
+
     def set_activation_checkpointing(
         self, strategy: Optional[ActivationCheckpointingStrategy], checkpoint_func: Optional[Callable] = None
     ):
@@ -1879,9 +1884,10 @@ class OLMo(nn.Module):
 
 
 class OLMoWithNoise(OLMo):
-    def __init__(self, noise_std: float = 1e-3, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.noise_std = noise_std
+    def __init__(self, config: ModelConfig):
+        super().__init__(config)
+        self.noise_std = config.noise_std
+        print(f"During training, we will add Gaussian noise to input embeddings with std {self.noise_std}.")
 
     def forward(
             self,
@@ -1957,6 +1963,7 @@ class OLMoWithNoise(OLMo):
 
             # Add Gaussian noise to the input embeddings.
             if apply_noise:
+                print(f"Adding Gaussian noise to input embeddings with std {self.noise_std} and seed {seed_offset + micro_batch_idx}")
                 torch.manual_seed(seed_offset + micro_batch_idx)
                 noise = torch.randn_like(x) * self.noise_std
                 x = x + noise

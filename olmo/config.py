@@ -474,6 +474,19 @@ class ModelConfig(BaseConfig):
     Apply norm after the attention/feedforward layers rather than before, as introduced in the Swin transformer paper (Liu et al).
     """
 
+    # MP added
+    batches_to_noise: List[int] = field(default_factory=list)
+
+    """
+    A list of indices that indicate which batches to apply noise to.
+    """
+
+    noise_std: float = 1e-3
+    """
+    The standard deviation of the Gaussian noise to apply to the model embeddings
+    """
+    # MP end
+
     @property
     def effective_n_kv_heads(self) -> int:
         if self.n_kv_heads is None:

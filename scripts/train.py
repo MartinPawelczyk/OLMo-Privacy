@@ -149,7 +149,9 @@ def main(cfg: TrainConfig) -> None:
         for block in olmo_model.transformer.blocks:
             block.compile(**cfg.compile.asdict())
 
-    olmo_model.set_activation_checkpointing(cfg.activation_checkpointing)
+    print(cfg.activation_checkpointing)
+    # MP: explicity added "strategy" here
+    # olmo_model.set_activation_checkpointing(strategy=cfg.activation_checkpointing)
 
     if cfg.distributed_strategy == DistributedStrategy.ddp:
         log.info("Wrapping model with DDP...")
@@ -373,7 +375,7 @@ def main(cfg: TrainConfig) -> None:
 
         if not cfg.dry_run:
             log.info("Starting training...")
-            trainer.fit(batches_to_noise=cfg.batches_to_noise)
+            trainer.fit(batches_to_noise=cfg.model.batches_to_noise)
             log.info("Training complete")
         else:
             log.info("Dry run complete")
