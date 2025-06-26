@@ -1,0 +1,985 @@
+JobId=21327245 JobName=olmo
+   UserId=mpawelczyk(63578) GroupId=hlakkaraju_lab(10379) MCS_label=N/A
+   Priority=9759908 Nice=0 Account=sneel_lab QOS=normal
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:03 TimeLimit=01:00:00 TimeMin=N/A
+   SubmitTime=2025-06-26T11:10:25 EligibleTime=2025-06-26T11:10:25
+   AccrueTime=2025-06-26T11:10:25
+   StartTime=2025-06-26T11:10:32 EndTime=2025-06-26T12:10:32 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2025-06-26T11:10:32 Scheduler=Main
+   Partition=seas_gpu AllocNode:Sid=0.0.0.0:1988876
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=holygpu8a16202
+   BatchHost=holygpu8a16202
+   NumNodes=1 NumCPUs=4 NumTasks=1 CPUs/Task=4 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=4,mem=80000M,node=1,billing=846,gres/gpu=4
+   AllocTRES=cpu=4,mem=80000M,node=1,billing=1341,gres/gpu=4,gres/gpu:nvidia_h100_80gb_hbm3=4
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=4 MinMemoryNode=80000M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/n/home09/mpawelczyk/OLMo/test.sbatch
+   WorkDir=/n/home09/mpawelczyk/OLMo
+   StdErr=/n/home09/mpawelczyk/OLMo/myerrors_21327245.err
+   StdIn=/dev/null
+   StdOut=/n/home09/mpawelczyk/OLMo/myoutput_21327245.out
+   TresPerNode=gres/gpu:4
+   TresPerTask=cpu=4
+   
+
+Thu Jun 26 11:10:36 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 555.42.06              Driver Version: 555.42.06      CUDA Version: 12.5     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          On  |   00000000:06:00.0 Off |                    0 |
+| N/A   24C    P0             67W /  550W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA H100 80GB HBM3          On  |   00000000:26:00.0 Off |                    0 |
+| N/A   23C    P0             66W /  550W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA H100 80GB HBM3          On  |   00000000:A6:00.0 Off |                    0 |
+| N/A   24C    P0             69W /  550W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA H100 80GB HBM3          On  |   00000000:C6:00.0 Off |                    0 |
+| N/A   24C    P0             66W /  550W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Loading modules...
+Modules loaded.
+Activating conda environment...
+Starting OLMo training...
+2025-06-26 11:12:08.336	holygpu8a16202.rc.fas.harvard.edu:0	train:420	INFO	CLI environment prepared
+2025-06-26 11:12:16.485	holygpu8a16202.rc.fas.harvard.edu:0	train:97	INFO	Configuration:
+2025-06-26 11:12:16.486	holygpu8a16202.rc.fas.harvard.edu:0	train:98	INFO	TrainConfig(run_name='OLMo2-1B-stage1', seed=6198, epoch=None, dry_run=False, model=ModelConfig(d_model=2048, n_heads=16, n_kv_heads=None, clip_qkv=None, n_layers=16, mlp_ratio=8, mlp_hidden_size=None, activation_type='swiglu', block_type='sequential', block_group_size=1, alibi=False, alibi_bias_max=8.0, rope=True, rope_full_precision=True, rope_theta=500000, flash_attention=True, attention_dropout=0.0, multi_query_attention=None, attention_layer_norm=True, residual_dropout=0.0, embedding_dropout=0.0, embedding_layer_norm=False, layer_norm_type='rms', layer_norm_with_affine=True, layer_norm_eps=1e-06, attention_layer_norm_with_affine=True, max_sequence_length=4096, include_bias=False, bias_for_layer_norm=False, scale_logits=False, vocab_size=100278, embedding_size=100352, weight_tying=False, eos_token_id=100257, pad_token_id=100277, init_device='meta', init_fn='normal', init_std=0.02, init_cutoff_factor=3.0, precision='amp_bf16', scale_emb_init=False, emb_init_std=None, norm_after=True, batches_to_noise=[0, 1], noise_std=0.001), optimizer=OptimizerConfig(name='adamw', learning_rate=0.0004, weight_decay=0.1, betas=(0.9, 0.95), eps=1e-08, no_decay_norm_and_bias=None, selective_updates=False, decay_norm_and_bias=True, decay_embeddings=False, metrics_log_interval=1, record_update_metrics=False), scheduler=SchedulerConfig(name='cosine_with_warmup', units='tokens', t_warmup=8388608000, t_max=5000000000000.0, alpha_f=0.1, grad_clip_warmup_steps=None, grad_clip_warmup_factor=None, warmup_min_lr=0.0), data=DataConfig(paths=['http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy'], memmap_dtype='uint32', datasets=None, label_mask_paths=None, pad_direction='right', generate_attention_mask=False, generate_doc_lengths=False, num_workers=32, drop_last=True, pin_memory=True, prefetch_factor=8, persistent_workers=True, timeout=0, seed=None, instance_filter=InstanceFilterConfig(repetition_max_period=13, repetition_min_period=1, repetition_max_count=32), custom_dataset=None), restore_dataloader=True, fast_forward_batches=None, evaluators=[EvaluatorConfig(label='arc_easy', type='downstream', data=DataConfig(paths=None, memmap_dtype='uint16', datasets=None, label_mask_paths=None, pad_direction='right', generate_attention_mask=False, generate_doc_lengths=False, num_workers=0, drop_last=False, pin_memory=False, prefetch_factor=None, persistent_workers=False, timeout=0, seed=None, instance_filter=None, custom_dataset=None), device_eval_batch_size=None, subset_num_batches=None)], eval_interval=1000, tokenizer=TokenizerConfig(identifier='tokenizers/allenai_dolma2.json', truncate_direction='right'), save_folder='/n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/', remote_save_folder=None, canceled_check_interval=50, save_interval=1000, save_interval_unsharded=None, save_interval_ephemeral=1000, save_num_checkpoints_to_keep=-1, save_num_unsharded_checkpoints_to_keep=-1, save_overwrite=True, force_save_unsharded=False, no_pre_train_checkpoint=False, load_path=None, load_path_sharded_checkpointer=None, try_load_latest_save=False, reset_optimizer_state=False, reset_trainer_state=False, sharded_checkpointer='olmo_core', new_style_checkpoints=None, max_duration=3, global_train_batch_size=512, device_train_batch_size=128, device_train_microbatch_size=2, device_eval_batch_size=2, eval_subset_num_batches=-1, eval_on_load=False, device_train_grad_accum=64, max_grad_norm=1.0, max_grad_norm_ratio=None, precision='amp_bf16', wandb=WandbConfig(project='olmo-small', entity='ai2-llm', group='OLMo2-1B-stage1', name='OLMOo2-1B', tags=['watching'], log_artifacts=False, rank_zero_only=True, log_interval=1), speed_monitor=SpeedMonitorConfig(window_size=1, gpu_flops_available=None), console_log_interval=1, gen1_gc_interval=10, compile=None, distributed_strategy='fsdp', fsdp=FSDPConfig(use_orig_params=True, sharding_strategy=<ShardingStrategy.SHARD_GRAD_OP: 2>, wrapping_strategy=None, precision='mixed', hybrid_sharding_num_model_replicas=None), ddp=None, single=SingleGPUConfig(device='auto'), softmax_auxiliary_loss=True, auxiliary_loss_multiplier=1e-05, time_limit=None, extra_steps_after_cancel=10, early_stopping_factor=None, save_data_indices=True, python_profiling=False, torch_profiling=False, stop_at=None, stop_after=None, activation_checkpointing=None, fused_loss=False, hf_datasets_cache_dir=None, module_outputs_save_steps=None)
+2025-06-26 11:12:16.494	holygpu8a16202.rc.fas.harvard.edu:0	train:105	INFO	Saving config to /n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/config.yaml
+2025-06-26 11:12:28.107	holygpu8a16202.rc.fas.harvard.edu:0	olmo.data.iterable_dataset:79	INFO	Saving global data order indices...
+2025-06-26 11:12:28.152	holygpu8a16202.rc.fas.harvard.edu:0	olmo.data.iterable_dataset:88	INFO	Global data order indices saved to '/n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/train_data/global_indices.npy'
+2025-06-26 11:12:28.169	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 11:12:28.169	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 11:12:28.169	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 11:12:28.169	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 11:12:28.708	holygpu8a16202.rc.fas.harvard.edu:0	train:139	INFO	Building model...
+During training, we will add Gaussian noise to input embeddings with std 0.001.
+During training, we will add Gaussian noise to input embeddings with std 0.001.
+During training, we will add Gaussian noise to input embeddings with std 0.001.
+During training, we will add Gaussian noise to input embeddings with std 0.001.
+2025-06-26 11:12:29.390	holygpu8a16202.rc.fas.harvard.edu:0	train:141	INFO	Total number of parameters: 1,484,916,736
+2025-06-26 11:12:29.390	holygpu8a16202.rc.fas.harvard.edu:0	train:142	INFO	Number of non-embedding parameters: 1,279,395,840
+None
+NoneNone2025-06-26 11:12:29.396	holygpu8a16202.rc.fas.harvard.edu:0	train:143	INFO	Peak GPU Memory (MB) before fsdp: 7
+
+
+None
+2025-06-26 11:12:29.396	holygpu8a16202.rc.fas.harvard.edu:0	train:175	INFO	Wrapping model with FSDP...
+2025-06-26 11:12:29.447	holygpu8a16202.rc.fas.harvard.edu:0	olmo.model:1179	INFO	Initializing model parameters...
+2025-06-26 11:12:29.631	holygpu8a16202.rc.fas.harvard.edu:0	train:235	INFO	Peak GPU Memory (MB) after fsdp: 13368
+2025-06-26 11:12:29.631	holygpu8a16202.rc.fas.harvard.edu:0	train:236	INFO	Model:
+2025-06-26 11:12:29.631	holygpu8a16202.rc.fas.harvard.edu:0	train:237	INFO	FullyShardedDataParallel(
+  (_fsdp_wrapped_module): OLMoWithNoise(
+    (transformer): ModuleDict(
+      (wte): Embedding(100352, 2048)
+      (emb_drop): Dropout(p=0.0, inplace=False)
+      (ln_f): RMSLayerNorm()
+      (blocks): ModuleList(
+        (0-15): 16 x OLMoSequentialBlock(
+          (dropout): Dropout(p=0.0, inplace=False)
+          (k_norm): RMSLayerNorm()
+          (q_norm): RMSLayerNorm()
+          (act): SwiGLU()
+          (attn_out): Linear(in_features=2048, out_features=2048, bias=False)
+          (ff_out): Linear(in_features=8192, out_features=2048, bias=False)
+          (rotary_emb): RotaryEmbedding()
+          (att_proj): Linear(in_features=2048, out_features=6144, bias=False)
+          (ff_proj): Linear(in_features=2048, out_features=16384, bias=False)
+          (attn_norm): RMSLayerNorm()
+          (ff_norm): RMSLayerNorm()
+        )
+      )
+      (ff_out): Linear(in_features=2048, out_features=100352, bias=False)
+    )
+  )
+)
+2025-06-26 11:12:29.633	holygpu8a16202.rc.fas.harvard.edu:0	olmo.optim:944	INFO	Constructing optimizer with 2 param groups
+2025-06-26 11:12:29.645	holygpu8a16202.rc.fas.harvard.edu:0	train:338	INFO	Saving pre-train checkpoint...
+2025-06-26 11:12:30.385	holygpu8a16202.rc.fas.harvard.edu:0	olmo.checkpoint:1924	INFO	Saving model and optim state...
+2025-06-26 11:12:30.939	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:30.939	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:30.939	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:30.939	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:31.224	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:31.242	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:31.242	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:31.242	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:31.242	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:31.260	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:31.260	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:31.260	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:31.260	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:31.699	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:31.699	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:31.699	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:31.699	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:32.243	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:32.245	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:32.246	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:32.248	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:46.326	holygpu8a16202.rc.fas.harvard.edu:0	olmo.checkpoint:1953	INFO	Saving trainer state...
+2025-06-26 11:12:46.392	holygpu8a16202.rc.fas.harvard.edu:0	olmo.checkpoint:607	INFO	Saving config...
+2025-06-26 11:12:47.190	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:47.199	holygpu8a16202.rc.fas.harvard.edu:0	train:340	INFO	Checkpoint saved to /n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/step0
+2025-06-26 11:12:47.199	holygpu8a16202.rc.fas.harvard.edu:0	train:343	INFO	Attempting to load pre-train checkpoint...
+2025-06-26 11:12:47.199	holygpu8a16202.rc.fas.harvard.edu:0	olmo.checkpoint:1977	INFO	Loading model and optim state...
+2025-06-26 11:12:47.206	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:47.220	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:47.233	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:47.490	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:47.491	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:47.491	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:47.491	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:47.491	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:47.491	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:47.491	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:47.491	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:47.492	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:47.498	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 11:12:47.498	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 11:12:47.498	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 11:12:47.499	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:47.500	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:47.500	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:47.502	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:47.502	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:47.503	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:47.506	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 11:12:47.509	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:47.574	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:47.574	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:47.574	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:47.574	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 11:12:48.111	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:48.112	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:48.117	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:48.118	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 11:12:48.156	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/planner_helpers.py:406: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  device = getattr(value, "device", None)
+
+2025-06-26 11:12:48.156	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/planner_helpers.py:406: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  device = getattr(value, "device", None)
+
+2025-06-26 11:12:48.156	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/planner_helpers.py:406: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  device = getattr(value, "device", None)
+
+2025-06-26 11:12:48.156	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/planner_helpers.py:406: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  device = getattr(value, "device", None)
+
+2025-06-26 11:12:48.176	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/default_planner.py:463: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  and md.size != obj.size()
+
+2025-06-26 11:12:48.176	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/default_planner.py:463: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  and md.size != obj.size()
+
+2025-06-26 11:12:48.176	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/default_planner.py:463: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  and md.size != obj.size()
+
+2025-06-26 11:12:48.176	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/default_planner.py:463: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  and md.size != obj.size()
+
+2025-06-26 11:12:51.975	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:625: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  param_numel = param.size().numel()
+
+2025-06-26 11:12:51.976	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:626: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = param.size()[0]
+
+2025-06-26 11:12:51.976	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:625: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  param_numel = param.size().numel()
+
+2025-06-26 11:12:51.977	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:626: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = param.size()[0]
+
+2025-06-26 11:12:51.976	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:625: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  param_numel = param.size().numel()
+
+2025-06-26 11:12:51.977	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:625: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  param_numel = param.size().numel()
+
+2025-06-26 11:12:51.977	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:626: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = param.size()[0]
+
+2025-06-26 11:12:51.977	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:626: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = param.size()[0]
+
+2025-06-26 11:12:51.990	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:652: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, param_numel).reshape(param.size())
+
+2025-06-26 11:12:51.992	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:652: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, param_numel).reshape(param.size())
+
+2025-06-26 11:12:51.993	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:652: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, param_numel).reshape(param.size())
+
+2025-06-26 11:12:51.993	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:652: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, param_numel).reshape(param.size())
+
+2025-06-26 11:12:52.390	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:40: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = sharded_tensor.size()[0]  # type: ignore[index]
+
+2025-06-26 11:12:52.390	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:41: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor_numel = sharded_tensor.size().numel()  # type: ignore[union-attr]
+
+2025-06-26 11:12:52.412	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:40: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = sharded_tensor.size()[0]  # type: ignore[index]
+
+2025-06-26 11:12:52.412	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:41: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor_numel = sharded_tensor.size().numel()  # type: ignore[union-attr]
+
+2025-06-26 11:12:52.421	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:40: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = sharded_tensor.size()[0]  # type: ignore[index]
+
+2025-06-26 11:12:52.422	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:41: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor_numel = sharded_tensor.size().numel()  # type: ignore[union-attr]
+
+2025-06-26 11:12:52.424	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:40: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = sharded_tensor.size()[0]  # type: ignore[index]
+
+2025-06-26 11:12:52.425	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:41: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor_numel = sharded_tensor.size().numel()  # type: ignore[union-attr]
+
+2025-06-26 11:12:52.497	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:65: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, tensor_numel).reshape(sharded_tensor.size())
+
+2025-06-26 11:12:52.522	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:65: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, tensor_numel).reshape(sharded_tensor.size())
+
+2025-06-26 11:12:52.533	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:65: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, tensor_numel).reshape(sharded_tensor.size())
+
+2025-06-26 11:12:52.533	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:65: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, tensor_numel).reshape(sharded_tensor.size())
+
+2025-06-26 11:12:56.149	holygpu8a16202.rc.fas.harvard.edu:0	olmo.checkpoint:1980	INFO	Loading trainer state...
+2025-06-26 11:12:56.274	holygpu8a16202.rc.fas.harvard.edu:0	olmo.train:410	INFO	Resetting learning rate...
+2025-06-26 11:12:56.274	holygpu8a16202.rc.fas.harvard.edu:0	olmo.train:422	INFO	Restoring RNG states...
+2025-06-26 11:12:56.475	holygpu8a16202.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 11:12:56.484	holygpu8a16202.rc.fas.harvard.edu:0	train:347	INFO	Checkpoint successfully loaded
+2025-06-26 11:12:56.484	holygpu8a16202.rc.fas.harvard.edu:0	train:378	INFO	Starting training...
+2025-06-26 11:12:56.489	holygpu8a16202.rc.fas.harvard.edu:0	olmo.train:1016	INFO	Pre-train system metrics
+    System/Peak GPU Memory (MB)=16,543
+2025-06-26 11:12:56.489	holygpu8a16202.rc.fas.harvard.edu:2	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 11:12:56.489	holygpu8a16202.rc.fas.harvard.edu:3	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 11:12:56.489	holygpu8a16202.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 1
+Adding Gaussian noise to input embeddings with std 0.001 and seed 2Adding Gaussian noise to input embeddings with std 0.001 and seed 3
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 0
+Adding Gaussian noise to input embeddings with std 0.001 and seed 6
+Adding Gaussian noise to input embeddings with std 0.001 and seed 4
+Adding Gaussian noise to input embeddings with std 0.001 and seed 5
+Adding Gaussian noise to input embeddings with std 0.001 and seed 7
+Adding Gaussian noise to input embeddings with std 0.001 and seed 10
+Adding Gaussian noise to input embeddings with std 0.001 and seed 11
+Adding Gaussian noise to input embeddings with std 0.001 and seed 8
+Adding Gaussian noise to input embeddings with std 0.001 and seed 9
+Adding Gaussian noise to input embeddings with std 0.001 and seed 13
+Adding Gaussian noise to input embeddings with std 0.001 and seed 15
+Adding Gaussian noise to input embeddings with std 0.001 and seed 12
+Adding Gaussian noise to input embeddings with std 0.001 and seed 14
+Adding Gaussian noise to input embeddings with std 0.001 and seed 16
+Adding Gaussian noise to input embeddings with std 0.001 and seed 18
+Adding Gaussian noise to input embeddings with std 0.001 and seed 19
+Adding Gaussian noise to input embeddings with std 0.001 and seed 17
+Adding Gaussian noise to input embeddings with std 0.001 and seed 23
+Adding Gaussian noise to input embeddings with std 0.001 and seed 21
+Adding Gaussian noise to input embeddings with std 0.001 and seed 22
+Adding Gaussian noise to input embeddings with std 0.001 and seed 20
+Adding Gaussian noise to input embeddings with std 0.001 and seed 25
+Adding Gaussian noise to input embeddings with std 0.001 and seed 26
+Adding Gaussian noise to input embeddings with std 0.001 and seed 24
+Adding Gaussian noise to input embeddings with std 0.001 and seed 27
+Adding Gaussian noise to input embeddings with std 0.001 and seed 30
+Adding Gaussian noise to input embeddings with std 0.001 and seed 31
+Adding Gaussian noise to input embeddings with std 0.001 and seed 28
+Adding Gaussian noise to input embeddings with std 0.001 and seed 29
+Adding Gaussian noise to input embeddings with std 0.001 and seed 33
+Adding Gaussian noise to input embeddings with std 0.001 and seed 34
+Adding Gaussian noise to input embeddings with std 0.001 and seed 35
+Adding Gaussian noise to input embeddings with std 0.001 and seed 32
+Adding Gaussian noise to input embeddings with std 0.001 and seed 38
+Adding Gaussian noise to input embeddings with std 0.001 and seed 39
+Adding Gaussian noise to input embeddings with std 0.001 and seed 37
+Adding Gaussian noise to input embeddings with std 0.001 and seed 36
+Adding Gaussian noise to input embeddings with std 0.001 and seed 42
+Adding Gaussian noise to input embeddings with std 0.001 and seed 41
+Adding Gaussian noise to input embeddings with std 0.001 and seed 40
+Adding Gaussian noise to input embeddings with std 0.001 and seed 43
+Adding Gaussian noise to input embeddings with std 0.001 and seed 45
+Adding Gaussian noise to input embeddings with std 0.001 and seed 44
+Adding Gaussian noise to input embeddings with std 0.001 and seed 47
+Adding Gaussian noise to input embeddings with std 0.001 and seed 46
+Adding Gaussian noise to input embeddings with std 0.001 and seed 49
+Adding Gaussian noise to input embeddings with std 0.001 and seed 51
+Adding Gaussian noise to input embeddings with std 0.001 and seed 50
+Adding Gaussian noise to input embeddings with std 0.001 and seed 48
+Adding Gaussian noise to input embeddings with std 0.001 and seed 54
+Adding Gaussian noise to input embeddings with std 0.001 and seed 55
+Adding Gaussian noise to input embeddings with std 0.001 and seed 52
+Adding Gaussian noise to input embeddings with std 0.001 and seed 53
+Adding Gaussian noise to input embeddings with std 0.001 and seed 59
+Adding Gaussian noise to input embeddings with std 0.001 and seed 56
+Adding Gaussian noise to input embeddings with std 0.001 and seed 58
+Adding Gaussian noise to input embeddings with std 0.001 and seed 57
+Adding Gaussian noise to input embeddings with std 0.001 and seed 62
+Adding Gaussian noise to input embeddings with std 0.001 and seed 61
+Adding Gaussian noise to input embeddings with std 0.001 and seed 60
+Adding Gaussian noise to input embeddings with std 0.001 and seed 63
+Adding Gaussian noise to input embeddings with std 0.001 and seed 66
+Adding Gaussian noise to input embeddings with std 0.001 and seed 64
+Adding Gaussian noise to input embeddings with std 0.001 and seed 67
+Adding Gaussian noise to input embeddings with std 0.001 and seed 65
+Adding Gaussian noise to input embeddings with std 0.001 and seed 71
+Adding Gaussian noise to input embeddings with std 0.001 and seed 70
+Adding Gaussian noise to input embeddings with std 0.001 and seed 68
+Adding Gaussian noise to input embeddings with std 0.001 and seed 69
+Adding Gaussian noise to input embeddings with std 0.001 and seed 75
+Adding Gaussian noise to input embeddings with std 0.001 and seed 73
+Adding Gaussian noise to input embeddings with std 0.001 and seed 72
+Adding Gaussian noise to input embeddings with std 0.001 and seed 74
+Adding Gaussian noise to input embeddings with std 0.001 and seed 79
+Adding Gaussian noise to input embeddings with std 0.001 and seed 78
+Adding Gaussian noise to input embeddings with std 0.001 and seed 76
+Adding Gaussian noise to input embeddings with std 0.001 and seed 77
+Adding Gaussian noise to input embeddings with std 0.001 and seed 80
+Adding Gaussian noise to input embeddings with std 0.001 and seed 82
+Adding Gaussian noise to input embeddings with std 0.001 and seed 83
+Adding Gaussian noise to input embeddings with std 0.001 and seed 81
+Adding Gaussian noise to input embeddings with std 0.001 and seed 84
+Adding Gaussian noise to input embeddings with std 0.001 and seed 87
+Adding Gaussian noise to input embeddings with std 0.001 and seed 86
+Adding Gaussian noise to input embeddings with std 0.001 and seed 85
+Adding Gaussian noise to input embeddings with std 0.001 and seed 91
+Adding Gaussian noise to input embeddings with std 0.001 and seed 89
+Adding Gaussian noise to input embeddings with std 0.001 and seed 90
+Adding Gaussian noise to input embeddings with std 0.001 and seed 88
+Adding Gaussian noise to input embeddings with std 0.001 and seed 93
+Adding Gaussian noise to input embeddings with std 0.001 and seed 94
+Adding Gaussian noise to input embeddings with std 0.001 and seed 92
+Adding Gaussian noise to input embeddings with std 0.001 and seed 95
+Adding Gaussian noise to input embeddings with std 0.001 and seed 97
+Adding Gaussian noise to input embeddings with std 0.001 and seed 98
+Adding Gaussian noise to input embeddings with std 0.001 and seed 96
+Adding Gaussian noise to input embeddings with std 0.001 and seed 99
+Adding Gaussian noise to input embeddings with std 0.001 and seed 102Adding Gaussian noise to input embeddings with std 0.001 and seed 103
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 100
+Adding Gaussian noise to input embeddings with std 0.001 and seed 101
+Adding Gaussian noise to input embeddings with std 0.001 and seed 106Adding Gaussian noise to input embeddings with std 0.001 and seed 107
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 105
+Adding Gaussian noise to input embeddings with std 0.001 and seed 104
+Adding Gaussian noise to input embeddings with std 0.001 and seed 111
+Adding Gaussian noise to input embeddings with std 0.001 and seed 109
+Adding Gaussian noise to input embeddings with std 0.001 and seed 108
+Adding Gaussian noise to input embeddings with std 0.001 and seed 110
+Adding Gaussian noise to input embeddings with std 0.001 and seed 114
+Adding Gaussian noise to input embeddings with std 0.001 and seed 112
+Adding Gaussian noise to input embeddings with std 0.001 and seed 115
+Adding Gaussian noise to input embeddings with std 0.001 and seed 113
+Adding Gaussian noise to input embeddings with std 0.001 and seed 117
+Adding Gaussian noise to input embeddings with std 0.001 and seed 119
+Adding Gaussian noise to input embeddings with std 0.001 and seed 116
+Adding Gaussian noise to input embeddings with std 0.001 and seed 118
+Adding Gaussian noise to input embeddings with std 0.001 and seed 120
+Adding Gaussian noise to input embeddings with std 0.001 and seed 123
+Adding Gaussian noise to input embeddings with std 0.001 and seed 121
+Adding Gaussian noise to input embeddings with std 0.001 and seed 122
+Adding Gaussian noise to input embeddings with std 0.001 and seed 125
+Adding Gaussian noise to input embeddings with std 0.001 and seed 127
+Adding Gaussian noise to input embeddings with std 0.001 and seed 126
+Adding Gaussian noise to input embeddings with std 0.001 and seed 124
+Adding Gaussian noise to input embeddings with std 0.001 and seed 129
+Adding Gaussian noise to input embeddings with std 0.001 and seed 131
+Adding Gaussian noise to input embeddings with std 0.001 and seed 128
+Adding Gaussian noise to input embeddings with std 0.001 and seed 130
+Adding Gaussian noise to input embeddings with std 0.001 and seed 135
+Adding Gaussian noise to input embeddings with std 0.001 and seed 133
+Adding Gaussian noise to input embeddings with std 0.001 and seed 134
+Adding Gaussian noise to input embeddings with std 0.001 and seed 132
+Adding Gaussian noise to input embeddings with std 0.001 and seed 136
+Adding Gaussian noise to input embeddings with std 0.001 and seed 139
+Adding Gaussian noise to input embeddings with std 0.001 and seed 138
+Adding Gaussian noise to input embeddings with std 0.001 and seed 137
+Adding Gaussian noise to input embeddings with std 0.001 and seed 142Adding Gaussian noise to input embeddings with std 0.001 and seed 143
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 141
+Adding Gaussian noise to input embeddings with std 0.001 and seed 140
+Adding Gaussian noise to input embeddings with std 0.001 and seed 146
+Adding Gaussian noise to input embeddings with std 0.001 and seed 144
+Adding Gaussian noise to input embeddings with std 0.001 and seed 147
+Adding Gaussian noise to input embeddings with std 0.001 and seed 145
+Adding Gaussian noise to input embeddings with std 0.001 and seed 151
+Adding Gaussian noise to input embeddings with std 0.001 and seed 148
+Adding Gaussian noise to input embeddings with std 0.001 and seed 149
+Adding Gaussian noise to input embeddings with std 0.001 and seed 150
+Adding Gaussian noise to input embeddings with std 0.001 and seed 155
+Adding Gaussian noise to input embeddings with std 0.001 and seed 154
+Adding Gaussian noise to input embeddings with std 0.001 and seed 153
+Adding Gaussian noise to input embeddings with std 0.001 and seed 152
+Adding Gaussian noise to input embeddings with std 0.001 and seed 159
+Adding Gaussian noise to input embeddings with std 0.001 and seed 156
+Adding Gaussian noise to input embeddings with std 0.001 and seed 158
+Adding Gaussian noise to input embeddings with std 0.001 and seed 157
+Adding Gaussian noise to input embeddings with std 0.001 and seed 161
+Adding Gaussian noise to input embeddings with std 0.001 and seed 162
+Adding Gaussian noise to input embeddings with std 0.001 and seed 163
+Adding Gaussian noise to input embeddings with std 0.001 and seed 160
+Adding Gaussian noise to input embeddings with std 0.001 and seed 164
+Adding Gaussian noise to input embeddings with std 0.001 and seed 167
+Adding Gaussian noise to input embeddings with std 0.001 and seed 165
+Adding Gaussian noise to input embeddings with std 0.001 and seed 166
+Adding Gaussian noise to input embeddings with std 0.001 and seed 169
+Adding Gaussian noise to input embeddings with std 0.001 and seed 171
+Adding Gaussian noise to input embeddings with std 0.001 and seed 168
+Adding Gaussian noise to input embeddings with std 0.001 and seed 170
+Adding Gaussian noise to input embeddings with std 0.001 and seed 172
+Adding Gaussian noise to input embeddings with std 0.001 and seed 175
+Adding Gaussian noise to input embeddings with std 0.001 and seed 174
+Adding Gaussian noise to input embeddings with std 0.001 and seed 173
+Adding Gaussian noise to input embeddings with std 0.001 and seed 178
+Adding Gaussian noise to input embeddings with std 0.001 and seed 177
+Adding Gaussian noise to input embeddings with std 0.001 and seed 176
+Adding Gaussian noise to input embeddings with std 0.001 and seed 179
+Adding Gaussian noise to input embeddings with std 0.001 and seed 183
+Adding Gaussian noise to input embeddings with std 0.001 and seed 182
+Adding Gaussian noise to input embeddings with std 0.001 and seed 181
+Adding Gaussian noise to input embeddings with std 0.001 and seed 180
+Adding Gaussian noise to input embeddings with std 0.001 and seed 185
+Adding Gaussian noise to input embeddings with std 0.001 and seed 184
+Adding Gaussian noise to input embeddings with std 0.001 and seed 187
+Adding Gaussian noise to input embeddings with std 0.001 and seed 186
+Adding Gaussian noise to input embeddings with std 0.001 and seed 189
+Adding Gaussian noise to input embeddings with std 0.001 and seed 190Adding Gaussian noise to input embeddings with std 0.001 and seed 191
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 188
+Adding Gaussian noise to input embeddings with std 0.001 and seed 194
+Adding Gaussian noise to input embeddings with std 0.001 and seed 193
+Adding Gaussian noise to input embeddings with std 0.001 and seed 195
+Adding Gaussian noise to input embeddings with std 0.001 and seed 192
+Adding Gaussian noise to input embeddings with std 0.001 and seed 196
+Adding Gaussian noise to input embeddings with std 0.001 and seed 198
+Adding Gaussian noise to input embeddings with std 0.001 and seed 199
+Adding Gaussian noise to input embeddings with std 0.001 and seed 197
+Adding Gaussian noise to input embeddings with std 0.001 and seed 200
+Adding Gaussian noise to input embeddings with std 0.001 and seed 203
+Adding Gaussian noise to input embeddings with std 0.001 and seed 201
+Adding Gaussian noise to input embeddings with std 0.001 and seed 202
+Adding Gaussian noise to input embeddings with std 0.001 and seed 204
+Adding Gaussian noise to input embeddings with std 0.001 and seed 206
+Adding Gaussian noise to input embeddings with std 0.001 and seed 207
+Adding Gaussian noise to input embeddings with std 0.001 and seed 205
+Adding Gaussian noise to input embeddings with std 0.001 and seed 208
+Adding Gaussian noise to input embeddings with std 0.001 and seed 211
+Adding Gaussian noise to input embeddings with std 0.001 and seed 210
+Adding Gaussian noise to input embeddings with std 0.001 and seed 209
+Adding Gaussian noise to input embeddings with std 0.001 and seed 212
+Adding Gaussian noise to input embeddings with std 0.001 and seed 214
+Adding Gaussian noise to input embeddings with std 0.001 and seed 213
+Adding Gaussian noise to input embeddings with std 0.001 and seed 215
+Adding Gaussian noise to input embeddings with std 0.001 and seed 216
+Adding Gaussian noise to input embeddings with std 0.001 and seed 218
+Adding Gaussian noise to input embeddings with std 0.001 and seed 219
+Adding Gaussian noise to input embeddings with std 0.001 and seed 217
+Adding Gaussian noise to input embeddings with std 0.001 and seed 221
+Adding Gaussian noise to input embeddings with std 0.001 and seed 223
+Adding Gaussian noise to input embeddings with std 0.001 and seed 220
+Adding Gaussian noise to input embeddings with std 0.001 and seed 222
+Adding Gaussian noise to input embeddings with std 0.001 and seed 227
+Adding Gaussian noise to input embeddings with std 0.001 and seed 224
+Adding Gaussian noise to input embeddings with std 0.001 and seed 226
+Adding Gaussian noise to input embeddings with std 0.001 and seed 225
+Adding Gaussian noise to input embeddings with std 0.001 and seed 231
+Adding Gaussian noise to input embeddings with std 0.001 and seed 229
+Adding Gaussian noise to input embeddings with std 0.001 and seed 228
+Adding Gaussian noise to input embeddings with std 0.001 and seed 230
+Adding Gaussian noise to input embeddings with std 0.001 and seed 234
+Adding Gaussian noise to input embeddings with std 0.001 and seed 235
+Adding Gaussian noise to input embeddings with std 0.001 and seed 233
+Adding Gaussian noise to input embeddings with std 0.001 and seed 232
+Adding Gaussian noise to input embeddings with std 0.001 and seed 236
+Adding Gaussian noise to input embeddings with std 0.001 and seed 238
+Adding Gaussian noise to input embeddings with std 0.001 and seed 239
+Adding Gaussian noise to input embeddings with std 0.001 and seed 237
+Adding Gaussian noise to input embeddings with std 0.001 and seed 240
+Adding Gaussian noise to input embeddings with std 0.001 and seed 243
+Adding Gaussian noise to input embeddings with std 0.001 and seed 242
+Adding Gaussian noise to input embeddings with std 0.001 and seed 241
+Adding Gaussian noise to input embeddings with std 0.001 and seed 244
+Adding Gaussian noise to input embeddings with std 0.001 and seed 245
+Adding Gaussian noise to input embeddings with std 0.001 and seed 247
+Adding Gaussian noise to input embeddings with std 0.001 and seed 246
+Adding Gaussian noise to input embeddings with std 0.001 and seed 250
+Adding Gaussian noise to input embeddings with std 0.001 and seed 248
+Adding Gaussian noise to input embeddings with std 0.001 and seed 251
+Adding Gaussian noise to input embeddings with std 0.001 and seed 249
+Adding Gaussian noise to input embeddings with std 0.001 and seed 253
+Adding Gaussian noise to input embeddings with std 0.001 and seed 254
+Adding Gaussian noise to input embeddings with std 0.001 and seed 255
+Adding Gaussian noise to input embeddings with std 0.001 and seed 252
+Adding Gaussian noise to input embeddings with std 0.001 and seed 1
+Adding Gaussian noise to input embeddings with std 0.001 and seed 2
+2025-06-26 11:17:03.593	holygpu8a16202.rc.fas.harvard.edu:0	olmo.train:1016	INFO	[step=1/3,epoch=0]
+    train/masked_instances_local_rank=0
+    optim/total_grad_norm=3.307
+    train/CrossEntropyLoss=11.92
+    train/Perplexity=149,834
+    train/ZLoss=0.0142
+    throughput/total_tokens=2,097,152
+    throughput/total_training_Gflops=7,186,826
+    throughput/total_training_log_Gflops=15.79
+    System/Peak GPU Memory (MB)=46,543
+Adding Gaussian noise to input embeddings with std 0.001 and seed 0
+Adding Gaussian noise to input embeddings with std 0.001 and seed 3
+Adding Gaussian noise to input embeddings with std 0.001 and seed 5
+Adding Gaussian noise to input embeddings with std 0.001 and seed 7
+Adding Gaussian noise to input embeddings with std 0.001 and seed 4
+Adding Gaussian noise to input embeddings with std 0.001 and seed 6
+Adding Gaussian noise to input embeddings with std 0.001 and seed 11
+Adding Gaussian noise to input embeddings with std 0.001 and seed 9
+Adding Gaussian noise to input embeddings with std 0.001 and seed 8
+Adding Gaussian noise to input embeddings with std 0.001 and seed 10
+Adding Gaussian noise to input embeddings with std 0.001 and seed 13
+Adding Gaussian noise to input embeddings with std 0.001 and seed 15
+Adding Gaussian noise to input embeddings with std 0.001 and seed 14
+Adding Gaussian noise to input embeddings with std 0.001 and seed 12
+Adding Gaussian noise to input embeddings with std 0.001 and seed 17
+Adding Gaussian noise to input embeddings with std 0.001 and seed 16
+Adding Gaussian noise to input embeddings with std 0.001 and seed 18
+Adding Gaussian noise to input embeddings with std 0.001 and seed 19
+Adding Gaussian noise to input embeddings with std 0.001 and seed 20
+Adding Gaussian noise to input embeddings with std 0.001 and seed 21
+Adding Gaussian noise to input embeddings with std 0.001 and seed 22
+Adding Gaussian noise to input embeddings with std 0.001 and seed 23
+Adding Gaussian noise to input embeddings with std 0.001 and seed 25
+Adding Gaussian noise to input embeddings with std 0.001 and seed 26
+Adding Gaussian noise to input embeddings with std 0.001 and seed 27
+Adding Gaussian noise to input embeddings with std 0.001 and seed 24
+Adding Gaussian noise to input embeddings with std 0.001 and seed 29
+Adding Gaussian noise to input embeddings with std 0.001 and seed 28
+Adding Gaussian noise to input embeddings with std 0.001 and seed 31
+Adding Gaussian noise to input embeddings with std 0.001 and seed 30
+Adding Gaussian noise to input embeddings with std 0.001 and seed 33
+Adding Gaussian noise to input embeddings with std 0.001 and seed 32
+Adding Gaussian noise to input embeddings with std 0.001 and seed 34
+Adding Gaussian noise to input embeddings with std 0.001 and seed 35
+Adding Gaussian noise to input embeddings with std 0.001 and seed 37
+Adding Gaussian noise to input embeddings with std 0.001 and seed 36
+Adding Gaussian noise to input embeddings with std 0.001 and seed 38
+Adding Gaussian noise to input embeddings with std 0.001 and seed 39
+Adding Gaussian noise to input embeddings with std 0.001 and seed 41
+Adding Gaussian noise to input embeddings with std 0.001 and seed 40
+Adding Gaussian noise to input embeddings with std 0.001 and seed 42
+Adding Gaussian noise to input embeddings with std 0.001 and seed 43
+Adding Gaussian noise to input embeddings with std 0.001 and seed 47
+Adding Gaussian noise to input embeddings with std 0.001 and seed 46
+Adding Gaussian noise to input embeddings with std 0.001 and seed 44
+Adding Gaussian noise to input embeddings with std 0.001 and seed 45
+Adding Gaussian noise to input embeddings with std 0.001 and seed 49
+Adding Gaussian noise to input embeddings with std 0.001 and seed 50
+Adding Gaussian noise to input embeddings with std 0.001 and seed 48
+Adding Gaussian noise to input embeddings with std 0.001 and seed 51
+Adding Gaussian noise to input embeddings with std 0.001 and seed 55
+Adding Gaussian noise to input embeddings with std 0.001 and seed 54
+Adding Gaussian noise to input embeddings with std 0.001 and seed 53
+Adding Gaussian noise to input embeddings with std 0.001 and seed 52
+Adding Gaussian noise to input embeddings with std 0.001 and seed 57
+Adding Gaussian noise to input embeddings with std 0.001 and seed 59
+Adding Gaussian noise to input embeddings with std 0.001 and seed 58
+Adding Gaussian noise to input embeddings with std 0.001 and seed 56
+Adding Gaussian noise to input embeddings with std 0.001 and seed 60
+Adding Gaussian noise to input embeddings with std 0.001 and seed 62
+Adding Gaussian noise to input embeddings with std 0.001 and seed 63
+Adding Gaussian noise to input embeddings with std 0.001 and seed 61
+Adding Gaussian noise to input embeddings with std 0.001 and seed 64
+Adding Gaussian noise to input embeddings with std 0.001 and seed 67
+Adding Gaussian noise to input embeddings with std 0.001 and seed 65
+Adding Gaussian noise to input embeddings with std 0.001 and seed 66
+Adding Gaussian noise to input embeddings with std 0.001 and seed 71
+Adding Gaussian noise to input embeddings with std 0.001 and seed 70
+Adding Gaussian noise to input embeddings with std 0.001 and seed 68
+Adding Gaussian noise to input embeddings with std 0.001 and seed 69
+Adding Gaussian noise to input embeddings with std 0.001 and seed 72
+Adding Gaussian noise to input embeddings with std 0.001 and seed 74
+Adding Gaussian noise to input embeddings with std 0.001 and seed 75
+Adding Gaussian noise to input embeddings with std 0.001 and seed 73
+Adding Gaussian noise to input embeddings with std 0.001 and seed 76
+Adding Gaussian noise to input embeddings with std 0.001 and seed 78
+Adding Gaussian noise to input embeddings with std 0.001 and seed 79
+Adding Gaussian noise to input embeddings with std 0.001 and seed 77
+Adding Gaussian noise to input embeddings with std 0.001 and seed 80
+Adding Gaussian noise to input embeddings with std 0.001 and seed 82
+Adding Gaussian noise to input embeddings with std 0.001 and seed 81
+Adding Gaussian noise to input embeddings with std 0.001 and seed 83
+Adding Gaussian noise to input embeddings with std 0.001 and seed 86
+Adding Gaussian noise to input embeddings with std 0.001 and seed 87
+Adding Gaussian noise to input embeddings with std 0.001 and seed 85
+Adding Gaussian noise to input embeddings with std 0.001 and seed 84
+Adding Gaussian noise to input embeddings with std 0.001 and seed 91
+Adding Gaussian noise to input embeddings with std 0.001 and seed 90
+Adding Gaussian noise to input embeddings with std 0.001 and seed 89
+Adding Gaussian noise to input embeddings with std 0.001 and seed 88
+Adding Gaussian noise to input embeddings with std 0.001 and seed 95
+Adding Gaussian noise to input embeddings with std 0.001 and seed 93
+Adding Gaussian noise to input embeddings with std 0.001 and seed 94
+Adding Gaussian noise to input embeddings with std 0.001 and seed 92
+Adding Gaussian noise to input embeddings with std 0.001 and seed 99
+Adding Gaussian noise to input embeddings with std 0.001 and seed 98
+Adding Gaussian noise to input embeddings with std 0.001 and seed 97Adding Gaussian noise to input embeddings with std 0.001 and seed 96
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 102
+Adding Gaussian noise to input embeddings with std 0.001 and seed 100
+Adding Gaussian noise to input embeddings with std 0.001 and seed 103
+Adding Gaussian noise to input embeddings with std 0.001 and seed 101
+Adding Gaussian noise to input embeddings with std 0.001 and seed 105
+Adding Gaussian noise to input embeddings with std 0.001 and seed 106
+Adding Gaussian noise to input embeddings with std 0.001 and seed 107
+Adding Gaussian noise to input embeddings with std 0.001 and seed 104
+Adding Gaussian noise to input embeddings with std 0.001 and seed 108
+Adding Gaussian noise to input embeddings with std 0.001 and seed 110
+Adding Gaussian noise to input embeddings with std 0.001 and seed 109
+Adding Gaussian noise to input embeddings with std 0.001 and seed 111
+Adding Gaussian noise to input embeddings with std 0.001 and seed 114
+Adding Gaussian noise to input embeddings with std 0.001 and seed 112
+Adding Gaussian noise to input embeddings with std 0.001 and seed 115
+Adding Gaussian noise to input embeddings with std 0.001 and seed 113
+Adding Gaussian noise to input embeddings with std 0.001 and seed 117
+Adding Gaussian noise to input embeddings with std 0.001 and seed 119
+Adding Gaussian noise to input embeddings with std 0.001 and seed 118
+Adding Gaussian noise to input embeddings with std 0.001 and seed 116
+Adding Gaussian noise to input embeddings with std 0.001 and seed 122
+Adding Gaussian noise to input embeddings with std 0.001 and seed 121
+Adding Gaussian noise to input embeddings with std 0.001 and seed 120
+Adding Gaussian noise to input embeddings with std 0.001 and seed 123
+Adding Gaussian noise to input embeddings with std 0.001 and seed 127Adding Gaussian noise to input embeddings with std 0.001 and seed 124
+
+Adding Gaussian noise to input embeddings with std 0.001 and seed 126
+Adding Gaussian noise to input embeddings with std 0.001 and seed 125
+Adding Gaussian noise to input embeddings with std 0.001 and seed 129
+Adding Gaussian noise to input embeddings with std 0.001 and seed 131
+Adding Gaussian noise to input embeddings with std 0.001 and seed 128
+Adding Gaussian noise to input embeddings with std 0.001 and seed 130
+Adding Gaussian noise to input embeddings with std 0.001 and seed 135
+Adding Gaussian noise to input embeddings with std 0.001 and seed 132
+Adding Gaussian noise to input embeddings with std 0.001 and seed 133
+Adding Gaussian noise to input embeddings with std 0.001 and seed 134
+Adding Gaussian noise to input embeddings with std 0.001 and seed 139
+Adding Gaussian noise to input embeddings with std 0.001 and seed 138
+Adding Gaussian noise to input embeddings with std 0.001 and seed 136
+Adding Gaussian noise to input embeddings with std 0.001 and seed 137
+Adding Gaussian noise to input embeddings with std 0.001 and seed 140
+Adding Gaussian noise to input embeddings with std 0.001 and seed 143
+Adding Gaussian noise to input embeddings with std 0.001 and seed 142
+Adding Gaussian noise to input embeddings with std 0.001 and seed 141
+Adding Gaussian noise to input embeddings with std 0.001 and seed 145
+Adding Gaussian noise to input embeddings with std 0.001 and seed 146
+Adding Gaussian noise to input embeddings with std 0.001 and seed 144
+Adding Gaussian noise to input embeddings with std 0.001 and seed 147
+Adding Gaussian noise to input embeddings with std 0.001 and seed 151
+Adding Gaussian noise to input embeddings with std 0.001 and seed 148
+Adding Gaussian noise to input embeddings with std 0.001 and seed 150
+Adding Gaussian noise to input embeddings with std 0.001 and seed 149
+Adding Gaussian noise to input embeddings with std 0.001 and seed 153
+Adding Gaussian noise to input embeddings with std 0.001 and seed 154
+Adding Gaussian noise to input embeddings with std 0.001 and seed 152
+Adding Gaussian noise to input embeddings with std 0.001 and seed 155
+Adding Gaussian noise to input embeddings with std 0.001 and seed 158
+Adding Gaussian noise to input embeddings with std 0.001 and seed 157
+Adding Gaussian noise to input embeddings with std 0.001 and seed 156
+Adding Gaussian noise to input embeddings with std 0.001 and seed 159
+Adding Gaussian noise to input embeddings with std 0.001 and seed 161
+Adding Gaussian noise to input embeddings with std 0.001 and seed 163
+Adding Gaussian noise to input embeddings with std 0.001 and seed 162
+Adding Gaussian noise to input embeddings with std 0.001 and seed 160
+Adding Gaussian noise to input embeddings with std 0.001 and seed 167
+Adding Gaussian noise to input embeddings with std 0.001 and seed 165
+Adding Gaussian noise to input embeddings with std 0.001 and seed 164
+Adding Gaussian noise to input embeddings with std 0.001 and seed 166
+Adding Gaussian noise to input embeddings with std 0.001 and seed 170
+Adding Gaussian noise to input embeddings with std 0.001 and seed 169
+Adding Gaussian noise to input embeddings with std 0.001 and seed 171
+Adding Gaussian noise to input embeddings with std 0.001 and seed 168
+Adding Gaussian noise to input embeddings with std 0.001 and seed 174
+Adding Gaussian noise to input embeddings with std 0.001 and seed 175
+Adding Gaussian noise to input embeddings with std 0.001 and seed 172
+Adding Gaussian noise to input embeddings with std 0.001 and seed 173
+Adding Gaussian noise to input embeddings with std 0.001 and seed 177
+Adding Gaussian noise to input embeddings with std 0.001 and seed 179
+Adding Gaussian noise to input embeddings with std 0.001 and seed 178
+Adding Gaussian noise to input embeddings with std 0.001 and seed 176
+Adding Gaussian noise to input embeddings with std 0.001 and seed 183
+Adding Gaussian noise to input embeddings with std 0.001 and seed 181
+Adding Gaussian noise to input embeddings with std 0.001 and seed 180
+Adding Gaussian noise to input embeddings with std 0.001 and seed 182
+Adding Gaussian noise to input embeddings with std 0.001 and seed 186
+Adding Gaussian noise to input embeddings with std 0.001 and seed 184
+Adding Gaussian noise to input embeddings with std 0.001 and seed 187
+Adding Gaussian noise to input embeddings with std 0.001 and seed 185
+Adding Gaussian noise to input embeddings with std 0.001 and seed 191
+Adding Gaussian noise to input embeddings with std 0.001 and seed 190
+Adding Gaussian noise to input embeddings with std 0.001 and seed 189
+Adding Gaussian noise to input embeddings with std 0.001 and seed 188
+Adding Gaussian noise to input embeddings with std 0.001 and seed 193
+Adding Gaussian noise to input embeddings with std 0.001 and seed 195
+Adding Gaussian noise to input embeddings with std 0.001 and seed 192
+Adding Gaussian noise to input embeddings with std 0.001 and seed 194
+Adding Gaussian noise to input embeddings with std 0.001 and seed 198
+Adding Gaussian noise to input embeddings with std 0.001 and seed 197
+Adding Gaussian noise to input embeddings with std 0.001 and seed 199
+Adding Gaussian noise to input embeddings with std 0.001 and seed 196
+Adding Gaussian noise to input embeddings with std 0.001 and seed 201
+Adding Gaussian noise to input embeddings with std 0.001 and seed 203
+Adding Gaussian noise to input embeddings with std 0.001 and seed 200
+Adding Gaussian noise to input embeddings with std 0.001 and seed 202
+Adding Gaussian noise to input embeddings with std 0.001 and seed 206
+Adding Gaussian noise to input embeddings with std 0.001 and seed 205
+Adding Gaussian noise to input embeddings with std 0.001 and seed 207
+Adding Gaussian noise to input embeddings with std 0.001 and seed 204
+Adding Gaussian noise to input embeddings with std 0.001 and seed 211
+Adding Gaussian noise to input embeddings with std 0.001 and seed 209
+Adding Gaussian noise to input embeddings with std 0.001 and seed 208
+Adding Gaussian noise to input embeddings with std 0.001 and seed 210
+Adding Gaussian noise to input embeddings with std 0.001 and seed 215
+Adding Gaussian noise to input embeddings with std 0.001 and seed 212
+Adding Gaussian noise to input embeddings with std 0.001 and seed 214
+Adding Gaussian noise to input embeddings with std 0.001 and seed 213
+Adding Gaussian noise to input embeddings with std 0.001 and seed 219
+Adding Gaussian noise to input embeddings with std 0.001 and seed 216
+Adding Gaussian noise to input embeddings with std 0.001 and seed 217
+Adding Gaussian noise to input embeddings with std 0.001 and seed 218
+Adding Gaussian noise to input embeddings with std 0.001 and seed 223
+Adding Gaussian noise to input embeddings with std 0.001 and seed 222
+Adding Gaussian noise to input embeddings with std 0.001 and seed 221
+Adding Gaussian noise to input embeddings with std 0.001 and seed 220
+Adding Gaussian noise to input embeddings with std 0.001 and seed 227
+Adding Gaussian noise to input embeddings with std 0.001 and seed 224
+Adding Gaussian noise to input embeddings with std 0.001 and seed 226
+Adding Gaussian noise to input embeddings with std 0.001 and seed 225
+Adding Gaussian noise to input embeddings with std 0.001 and seed 229
+Adding Gaussian noise to input embeddings with std 0.001 and seed 230
+Adding Gaussian noise to input embeddings with std 0.001 and seed 228
+Adding Gaussian noise to input embeddings with std 0.001 and seed 231
+Adding Gaussian noise to input embeddings with std 0.001 and seed 235
+Adding Gaussian noise to input embeddings with std 0.001 and seed 232
+Adding Gaussian noise to input embeddings with std 0.001 and seed 234
+Adding Gaussian noise to input embeddings with std 0.001 and seed 233
+Adding Gaussian noise to input embeddings with std 0.001 and seed 237
+Adding Gaussian noise to input embeddings with std 0.001 and seed 239
+Adding Gaussian noise to input embeddings with std 0.001 and seed 236
+Adding Gaussian noise to input embeddings with std 0.001 and seed 238
+Adding Gaussian noise to input embeddings with std 0.001 and seed 241
+Adding Gaussian noise to input embeddings with std 0.001 and seed 242
+Adding Gaussian noise to input embeddings with std 0.001 and seed 240
+Adding Gaussian noise to input embeddings with std 0.001 and seed 243
+Adding Gaussian noise to input embeddings with std 0.001 and seed 245
+Adding Gaussian noise to input embeddings with std 0.001 and seed 247
+Adding Gaussian noise to input embeddings with std 0.001 and seed 246
+Adding Gaussian noise to input embeddings with std 0.001 and seed 244
+Adding Gaussian noise to input embeddings with std 0.001 and seed 250
+Adding Gaussian noise to input embeddings with std 0.001 and seed 248
+Adding Gaussian noise to input embeddings with std 0.001 and seed 251
+Adding Gaussian noise to input embeddings with std 0.001 and seed 249
+Adding Gaussian noise to input embeddings with std 0.001 and seed 253
+Adding Gaussian noise to input embeddings with std 0.001 and seed 254
+Adding Gaussian noise to input embeddings with std 0.001 and seed 252
+Adding Gaussian noise to input embeddings with std 0.001 and seed 255
+2025-06-26 11:17:27.091	holygpu8a16202.rc.fas.harvard.edu:0	olmo.train:1016	INFO	[step=2/3,epoch=0]
+    train/masked_instances_local_rank=0
+    optim/total_grad_norm=3.267
+    train/CrossEntropyLoss=11.85
+    train/Perplexity=139,915
+    train/ZLoss=0.0141
+    throughput/total_tokens=4,194,304
+    throughput/total_training_Gflops=14,373,653
+    throughput/total_training_log_Gflops=16.48
+    throughput/device/tokens_per_second=22,325
+    throughput/device/batches_per_second=0.0426
+    System/Peak GPU Memory (MB)=46,543
+2025-06-26 11:17:50.372	holygpu8a16202.rc.fas.harvard.edu:0	olmo.train:1016	INFO	[step=3/3,epoch=0]
+    train/masked_instances_local_rank=1.0000
+    optim/total_grad_norm=3.349
+    train/CrossEntropyLoss=11.72
+    train/Perplexity=123,036
+    train/ZLoss=0.0139
+    throughput/total_tokens=6,291,456
+    throughput/total_training_Gflops=21,560,480
+    throughput/total_training_log_Gflops=16.89
+    throughput/device/tokens_per_second=22,521
+    throughput/device/batches_per_second=0.0430

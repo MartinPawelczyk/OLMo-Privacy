@@ -3,7 +3,7 @@
 #SBATCH -n 1                            # Number of cores
 #SBATCH -N 1                            # Ensure that all cores are on one machine
 #SBATCH -t 0-01:00                      # Runtime in D-HH:MM, minimum of 10 minutes
-#SBATCH --gres=gpu:1                    # gpu:tesla_v100-pcie-32gb:1
+#SBATCH --gres=gpu:4                    # gpu:tesla_v100-pcie-32gb:1
 #SBATCH -p gpu,seas_gpu
 #SBATCH -v                              # make outout more verbose 
 #SBATCH --cpus-per-task=4               # Number of CPU cores per task
@@ -37,4 +37,4 @@ export WANDB_MODE="disabled" # Using both just to be super safe
 
 echo "Starting OLMo training..."
 WANDB_MODE=disabled WANDB_DISABLED=true \ 
-torchrun --nproc_per_node=1 --master_port=29501 scripts/train.py configs/official-0425/OLMo2-1B-stage1.yaml
+torchrun --nproc_per_node=4 --master_port=29501 scripts/train.py configs/official-0425/OLMo2-1B-stage1.yaml

@@ -735,8 +735,7 @@ class Trainer:
         loss_reduction: str = "mean", 
         compute_z_loss: bool = False,
         micro_batch_idx: Optional[int] = None,
-        apply_noise: bool = False,
-        seed_offset: int = 0
+        apply_noise: bool = False
     ) -> Tuple[torch.Tensor, Optional[torch.Tensor], torch.Tensor]:
         # shape: (batch_size, seq_len, vocab_size)
         logits = self.dist_model(
@@ -747,8 +746,7 @@ class Trainer:
             max_doc_lens=batch.get("max_doc_lens"),
             # MP: added micro-batch index & apply noise
             micro_batch_idx=micro_batch_idx,
-            apply_noise=apply_noise,
-            seed_offset=seed_offset
+            apply_noise=apply_noise
         ).logits
         logits_for_loss = logits[..., :-1, :].contiguous()
         # shape: (batch_size * seq_len, vocab_size)
@@ -780,7 +778,7 @@ class Trainer:
             # MP: adjusted forward pass to include micro-batch index and apply noise
             micro_batch_idx=micro_batch_idx,
             apply_noise=apply_noise,
-            seed_offset=self.cfg.global_train_batch_size + self.cfg.device_train_microbatch_size
+            # seed_offset=self.cfg.global_train_batch_size + self.cfg.device_train_microbatch_size
             # MP : end
         )
         ce_loss = ce_loss / batch_size_in_tokens
@@ -815,6 +813,15 @@ class Trainer:
         num_micro_batches = len(micro_batches)
 
         for micro_batch_idx, micro_batch in enumerate(micro_batches):
+            # MP ADDED: added global micro-batch index to ensure uniqueness across GPUs
+            # Calculate the global micro-batch index.
+            # This is used to ensure that each micro-batch has a unique index across all GPUs
+            # and to ensure that the noise is applied consistently across all micro-batches.
+            global_micro_batch_idx = (
+                        micro_batch_idx * get_world_size()  +      # Offset by this epoch's previous global batches
+                        get_global_rank()                          # Add the rank to ensure uniqueness across GPUs within a global batch
+                    )
+
             # setup sync context for DDP for all micro-batches except the last
             grad_sync_context = nullcontext
             if (
@@ -836,7 +843,7 @@ class Trainer:
                     loss, ce_loss, z_loss = self.train_micro_batch(
                         micro_batch, 
                         batch_size_in_tokens,
-                        micro_batch_idx=micro_batch_idx,
+                        micro_batch_idx=global_micro_batch_idx,
                         apply_noise=apply_noise
                     )
 
@@ -1235,6 +1242,7 @@ class Trainer:
                     # Alternatively we'd have to use a distributed all reduce over seq_len here, but I don't want that
                     # overhead. So for now I'm putting these assertions here so if the assumption is violated it will
                     # fail loudly.
+                    self.trainer_global_dataloader_batch_idx = batch_id
                     batch_size, seq_len = batch["input_ids"].shape
                     assert seq_len == self.cfg.model.max_sequence_length
                     assert batch_size == self.cfg.device_train_batch_size
@@ -1256,6 +1264,7 @@ class Trainer:
 
                     # Run train step on batch.
                     # MP adjusted train step to include apply_noise parameter
+
                     metrics = self.train_step(
                         batch,
                         apply_noise=batch_id in batches_to_noise,

@@ -1901,7 +1901,6 @@ class OLMoWithNoise(OLMo):
             # MP: Gaussian noise parameters beginning
             micro_batch_idx: Optional[int] = None,
             apply_noise: bool = False,
-            seed_offset: int = 0,
             # MP: Gaussian noise parameters end
             output_hidden_states: Optional[bool] = None,
             doc_lens: Optional[torch.Tensor] = None,
@@ -1961,10 +1960,11 @@ class OLMoWithNoise(OLMo):
             # shape: (batch_size, seq_len, d_model)
             x = self.transformer.wte(input_ids) if input_embeddings is None else input_embeddings  # type: ignore
 
-            # Add Gaussian noise to the input embeddings.
+            # MP: Add Gaussian noise to the input embeddings.
             if apply_noise:
-                print(f"Adding Gaussian noise to input embeddings with std {self.noise_std} and seed {seed_offset + micro_batch_idx}")
-                torch.manual_seed(seed_offset + micro_batch_idx)
+                assert micro_batch_idx is not None, "micro_batch_idx must be provided when apply_noise is True"
+                print(f"Adding Gaussian noise to input embeddings with std {self.noise_std} and seed {micro_batch_idx}")
+                torch.manual_seed(micro_batch_idx)
                 noise = torch.randn_like(x) * self.noise_std
                 x = x + noise
 

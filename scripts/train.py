@@ -151,6 +151,7 @@ def main(cfg: TrainConfig) -> None:
 
     print(cfg.activation_checkpointing)
     # MP: explicity added "strategy" here
+    # led to weird error and commented for now
     # olmo_model.set_activation_checkpointing(strategy=cfg.activation_checkpointing)
 
     if cfg.distributed_strategy == DistributedStrategy.ddp:

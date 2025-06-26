@@ -1,0 +1,2348 @@
+JobId=21324394 JobName=olmo
+   UserId=mpawelczyk(63578) GroupId=hlakkaraju_lab(10379) MCS_label=N/A
+   Priority=9875706 Nice=0 Account=sneel_lab QOS=normal
+   JobState=RUNNING Reason=Prolog Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:00 TimeLimit=01:00:00 TimeMin=N/A
+   SubmitTime=2025-06-26T10:26:36 EligibleTime=2025-06-26T10:26:36
+   AccrueTime=2025-06-26T10:26:36
+   StartTime=2025-06-26T10:26:42 EndTime=2025-06-26T11:26:42 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2025-06-26T10:26:42 Scheduler=Main
+   Partition=seas_gpu AllocNode:Sid=0.0.0.0:1988876
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=holygpu8a25406
+   BatchHost=holygpu8a25406
+   NumNodes=1 NumCPUs=4 NumTasks=1 CPUs/Task=4 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=4,mem=80000M,node=1,billing=428,gres/gpu=2
+   AllocTRES=cpu=4,mem=80000M,node=1,billing=674,gres/gpu=2,gres/gpu:nvidia_a100-sxm4-80gb=2
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=4 MinMemoryNode=80000M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/n/home09/mpawelczyk/OLMo/test.sbatch
+   WorkDir=/n/home09/mpawelczyk/OLMo
+   StdErr=/n/home09/mpawelczyk/OLMo/myerrors_21324394.err
+   StdIn=/dev/null
+   StdOut=/n/home09/mpawelczyk/OLMo/myoutput_21324394.out
+   TresPerNode=gres/gpu:2
+   TresPerTask=cpu=4
+   
+
+Thu Jun 26 10:26:42 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:4B:00.0 Off |                    0 |
+| N/A   28C    P0             58W /  500W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-80GB          On  |   00000000:CA:00.0 Off |                    0 |
+| N/A   29C    P0             61W /  500W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Loading modules...
+Modules loaded.
+Activating conda environment...
+Starting OLMo training...
+2025-06-26 10:28:21.897	holygpu8a25406.rc.fas.harvard.edu:0	train:420	INFO	CLI environment prepared
+2025-06-26 10:28:22.327	holygpu8a25406.rc.fas.harvard.edu:0	train:97	INFO	Configuration:
+2025-06-26 10:28:22.327	holygpu8a25406.rc.fas.harvard.edu:0	train:98	INFO	TrainConfig(run_name='OLMo2-1B-stage1', seed=6198, epoch=None, dry_run=False, model=ModelConfig(d_model=2048, n_heads=16, n_kv_heads=None, clip_qkv=None, n_layers=16, mlp_ratio=8, mlp_hidden_size=None, activation_type='swiglu', block_type='sequential', block_group_size=1, alibi=False, alibi_bias_max=8.0, rope=True, rope_full_precision=True, rope_theta=500000, flash_attention=True, attention_dropout=0.0, multi_query_attention=None, attention_layer_norm=True, residual_dropout=0.0, embedding_dropout=0.0, embedding_layer_norm=False, layer_norm_type='rms', layer_norm_with_affine=True, layer_norm_eps=1e-06, attention_layer_norm_with_affine=True, max_sequence_length=4096, include_bias=False, bias_for_layer_norm=False, scale_logits=False, vocab_size=100278, embedding_size=100352, weight_tying=False, eos_token_id=100257, pad_token_id=100277, init_device='meta', init_fn='normal', init_std=0.02, init_cutoff_factor=3.0, precision='amp_bf16', scale_emb_init=False, emb_init_std=None, norm_after=True, batches_to_noise=[0, 1], noise_std=0.001), optimizer=OptimizerConfig(name='adamw', learning_rate=0.0004, weight_decay=0.1, betas=(0.9, 0.95), eps=1e-08, no_decay_norm_and_bias=None, selective_updates=False, decay_norm_and_bias=True, decay_embeddings=False, metrics_log_interval=1, record_update_metrics=False), scheduler=SchedulerConfig(name='cosine_with_warmup', units='tokens', t_warmup=8388608000, t_max=5000000000000.0, alpha_f=0.1, grad_clip_warmup_steps=None, grad_clip_warmup_factor=None, warmup_min_lr=0.0), data=DataConfig(paths=['http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy'], memmap_dtype='uint32', datasets=None, label_mask_paths=None, pad_direction='right', generate_attention_mask=False, generate_doc_lengths=False, num_workers=32, drop_last=True, pin_memory=True, prefetch_factor=8, persistent_workers=True, timeout=0, seed=None, instance_filter=InstanceFilterConfig(repetition_max_period=13, repetition_min_period=1, repetition_max_count=32), custom_dataset=None), restore_dataloader=True, fast_forward_batches=None, evaluators=[EvaluatorConfig(label='arc_easy', type='downstream', data=DataConfig(paths=None, memmap_dtype='uint16', datasets=None, label_mask_paths=None, pad_direction='right', generate_attention_mask=False, generate_doc_lengths=False, num_workers=0, drop_last=False, pin_memory=False, prefetch_factor=None, persistent_workers=False, timeout=0, seed=None, instance_filter=None, custom_dataset=None), device_eval_batch_size=None, subset_num_batches=None)], eval_interval=1000, tokenizer=TokenizerConfig(identifier='tokenizers/allenai_dolma2.json', truncate_direction='right'), save_folder='/n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/', remote_save_folder=None, canceled_check_interval=50, save_interval=1000, save_interval_unsharded=None, save_interval_ephemeral=1000, save_num_checkpoints_to_keep=-1, save_num_unsharded_checkpoints_to_keep=-1, save_overwrite=True, force_save_unsharded=False, no_pre_train_checkpoint=False, load_path=None, load_path_sharded_checkpointer=None, try_load_latest_save=False, reset_optimizer_state=False, reset_trainer_state=False, sharded_checkpointer='olmo_core', new_style_checkpoints=None, max_duration=3, global_train_batch_size=512, device_train_batch_size=256, device_train_microbatch_size=2, device_eval_batch_size=2, eval_subset_num_batches=-1, eval_on_load=False, device_train_grad_accum=128, max_grad_norm=1.0, max_grad_norm_ratio=None, precision='amp_bf16', wandb=WandbConfig(project='olmo-small', entity='ai2-llm', group='OLMo2-1B-stage1', name='OLMOo2-1B', tags=['watching'], log_artifacts=False, rank_zero_only=True, log_interval=1), speed_monitor=SpeedMonitorConfig(window_size=1, gpu_flops_available=None), console_log_interval=1, gen1_gc_interval=10, compile=None, distributed_strategy='fsdp', fsdp=FSDPConfig(use_orig_params=True, sharding_strategy=<ShardingStrategy.SHARD_GRAD_OP: 2>, wrapping_strategy=None, precision='mixed', hybrid_sharding_num_model_replicas=None), ddp=None, single=SingleGPUConfig(device='auto'), softmax_auxiliary_loss=True, auxiliary_loss_multiplier=1e-05, time_limit=None, extra_steps_after_cancel=10, early_stopping_factor=None, save_data_indices=True, python_profiling=False, torch_profiling=False, stop_at=None, stop_after=None, activation_checkpointing=None, fused_loss=False, hf_datasets_cache_dir=None, module_outputs_save_steps=None)
+2025-06-26 10:28:22.341	holygpu8a25406.rc.fas.harvard.edu:0	train:105	INFO	Saving config to /n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/config.yaml
+2025-06-26 10:28:34.809	holygpu8a25406.rc.fas.harvard.edu:0	olmo.data.iterable_dataset:79	INFO	Saving global data order indices...
+2025-06-26 10:28:34.856	holygpu8a25406.rc.fas.harvard.edu:0	olmo.data.iterable_dataset:88	INFO	Global data order indices saved to '/n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/train_data/global_indices.npy'
+2025-06-26 10:28:34.888	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 10:28:34.889	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 10:28:36.498	holygpu8a25406.rc.fas.harvard.edu:0	train:139	INFO	Building model...
+During training, we will add Gaussian noise to input embeddings with std 0.001.
+During training, we will add Gaussian noise to input embeddings with std 0.001.
+2025-06-26 10:28:37.987	holygpu8a25406.rc.fas.harvard.edu:0	train:141	INFO	Total number of parameters: 1,484,916,736
+2025-06-26 10:28:37.987	holygpu8a25406.rc.fas.harvard.edu:0	train:142	INFO	Number of non-embedding parameters: 1,279,395,840
+None
+2025-06-26 10:28:38.010	holygpu8a25406.rc.fas.harvard.edu:0	train:143	INFO	Peak GPU Memory (MB) before fsdp: 7
+None
+2025-06-26 10:28:38.010	holygpu8a25406.rc.fas.harvard.edu:0	train:175	INFO	Wrapping model with FSDP...
+2025-06-26 10:28:38.076	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1179	INFO	Initializing model parameters...
+2025-06-26 10:28:38.560	holygpu8a25406.rc.fas.harvard.edu:0	train:235	INFO	Peak GPU Memory (MB) after fsdp: 14853
+2025-06-26 10:28:38.560	holygpu8a25406.rc.fas.harvard.edu:0	train:236	INFO	Model:
+2025-06-26 10:28:38.561	holygpu8a25406.rc.fas.harvard.edu:0	train:237	INFO	FullyShardedDataParallel(
+  (_fsdp_wrapped_module): OLMoWithNoise(
+    (transformer): ModuleDict(
+      (wte): Embedding(100352, 2048)
+      (emb_drop): Dropout(p=0.0, inplace=False)
+      (ln_f): RMSLayerNorm()
+      (blocks): ModuleList(
+        (0-15): 16 x OLMoSequentialBlock(
+          (dropout): Dropout(p=0.0, inplace=False)
+          (k_norm): RMSLayerNorm()
+          (q_norm): RMSLayerNorm()
+          (act): SwiGLU()
+          (attn_out): Linear(in_features=2048, out_features=2048, bias=False)
+          (ff_out): Linear(in_features=8192, out_features=2048, bias=False)
+          (rotary_emb): RotaryEmbedding()
+          (att_proj): Linear(in_features=2048, out_features=6144, bias=False)
+          (ff_proj): Linear(in_features=2048, out_features=16384, bias=False)
+          (attn_norm): RMSLayerNorm()
+          (ff_norm): RMSLayerNorm()
+        )
+      )
+      (ff_out): Linear(in_features=2048, out_features=100352, bias=False)
+    )
+  )
+)
+2025-06-26 10:28:38.563	holygpu8a25406.rc.fas.harvard.edu:0	olmo.optim:944	INFO	Constructing optimizer with 2 param groups
+2025-06-26 10:28:38.572	holygpu8a25406.rc.fas.harvard.edu:0	train:338	INFO	Saving pre-train checkpoint...
+2025-06-26 10:28:39.489	holygpu8a25406.rc.fas.harvard.edu:0	olmo.checkpoint:1924	INFO	Saving model and optim state...
+2025-06-26 10:28:40.061	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:40.061	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:40.867	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 10:28:40.867	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 10:28:40.867	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 10:28:40.867	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 10:28:40.867	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 10:28:40.867	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 10:28:40.908	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 10:28:40.908	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 10:28:40.930	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:40.930	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:42.059	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:42.060	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:43.673	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:43.676	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:55.527	holygpu8a25406.rc.fas.harvard.edu:0	olmo.checkpoint:1953	INFO	Saving trainer state...
+2025-06-26 10:28:55.561	holygpu8a25406.rc.fas.harvard.edu:0	olmo.checkpoint:607	INFO	Saving config...
+2025-06-26 10:28:56.333	holygpu8a25406.rc.fas.harvard.edu:0	train:340	INFO	Checkpoint saved to /n/netscratch/sneel_lab/Lab/martin/models/olmo2/checkpoints/1B/step0
+2025-06-26 10:28:56.333	holygpu8a25406.rc.fas.harvard.edu:0	train:343	INFO	Attempting to load pre-train checkpoint...
+2025-06-26 10:28:56.334	holygpu8a25406.rc.fas.harvard.edu:0	olmo.checkpoint:1977	INFO	Loading model and optim state...
+2025-06-26 10:28:56.340	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:56.359	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:57.147	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 10:28:57.147	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 10:28:57.147	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 10:28:57.152	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:722: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+
+2025-06-26 10:28:57.153	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:739: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+
+2025-06-26 10:28:57.153	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:741: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+
+2025-06-26 10:28:57.158	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 10:28:57.161	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:57.164	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/state_dict.py:535: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  if torch.is_tensor(p) and p.is_meta:
+
+2025-06-26 10:28:57.167	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:57.270	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:57.270	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:859: UserWarning: `_get_pg_default_device` will be deprecated, it only stays for backward-compatiblity reason. If you need to find a device for object collectives, please use `_get_object_coll_device`. If you need to query the device types supported by group, please use `_device_capability(group)`. 
+  warnings.warn(
+
+2025-06-26 10:28:58.943	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:58.947	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_shard/sharded_tensor/api.py:640: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  current_dtype = self.dtype
+
+2025-06-26 10:28:58.987	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/planner_helpers.py:406: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  device = getattr(value, "device", None)
+
+2025-06-26 10:28:58.987	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/planner_helpers.py:406: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  device = getattr(value, "device", None)
+
+2025-06-26 10:28:59.012	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/default_planner.py:463: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  and md.size != obj.size()
+
+2025-06-26 10:28:59.012	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/checkpoint/default_planner.py:463: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  and md.size != obj.size()
+
+2025-06-26 10:29:06.837	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:625: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  param_numel = param.size().numel()
+
+2025-06-26 10:29:06.838	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:626: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = param.size()[0]
+
+2025-06-26 10:29:06.838	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:625: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  param_numel = param.size().numel()
+
+2025-06-26 10:29:06.838	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:626: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = param.size()[0]
+
+2025-06-26 10:29:06.878	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:652: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, param_numel).reshape(param.size())
+
+2025-06-26 10:29:06.879	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/fsdp/_state_dict_utils.py:652: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, param_numel).reshape(param.size())
+
+2025-06-26 10:29:07.537	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:40: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = sharded_tensor.size()[0]  # type: ignore[index]
+
+2025-06-26 10:29:07.537	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:40: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  dim_0_size = sharded_tensor.size()[0]  # type: ignore[index]
+
+2025-06-26 10:29:07.537	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:41: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor_numel = sharded_tensor.size().numel()  # type: ignore[union-attr]
+
+2025-06-26 10:29:07.537	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:41: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor_numel = sharded_tensor.size().numel()  # type: ignore[union-attr]
+
+2025-06-26 10:29:07.760	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:65: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, tensor_numel).reshape(sharded_tensor.size())
+
+2025-06-26 10:29:07.761	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/distributed/_state_dict_utils.py:65: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor = tensor.narrow(0, 0, tensor_numel).reshape(sharded_tensor.size())
+
+2025-06-26 10:29:14.530	holygpu8a25406.rc.fas.harvard.edu:0	olmo.checkpoint:1980	INFO	Loading trainer state...
+2025-06-26 10:29:14.875	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:410	INFO	Resetting learning rate...
+2025-06-26 10:29:14.875	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:422	INFO	Restoring RNG states...
+2025-06-26 10:29:15.071	holygpu8a25406.rc.fas.harvard.edu:1	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+2025-06-26 10:29:15.091	holygpu8a25406.rc.fas.harvard.edu:0	train:347	INFO	Checkpoint successfully loaded
+2025-06-26 10:29:15.092	holygpu8a25406.rc.fas.harvard.edu:0	train:378	INFO	Starting training...
+2025-06-26 10:29:15.093	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:1017	INFO	Pre-train system metrics
+    System/Peak GPU Memory (MB)=21,204
+2025-06-26 10:29:15.093	holygpu8a25406.rc.fas.harvard.edu:0	py.warnings:109	WARNING	/n/home09/mpawelczyk/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py:626: UserWarning: This DataLoader will create 32 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+
+global_micro_batch_idx: 1
+global_micro_batch_idx: 0
+2025-06-26 10:31:33.432	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 0
+global_micro_batch_idx: 2
+2025-06-26 10:31:36.912	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 2
+global_micro_batch_idx: 3
+global_micro_batch_idx: 4
+2025-06-26 10:31:37.425	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 4
+global_micro_batch_idx: 5
+global_micro_batch_idx: 7
+global_micro_batch_idx: 6
+2025-06-26 10:31:38.047	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 6
+global_micro_batch_idx: 9
+global_micro_batch_idx: 8
+2025-06-26 10:31:38.672	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 8
+global_micro_batch_idx: 11
+global_micro_batch_idx: 10
+2025-06-26 10:31:39.290	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 10
+global_micro_batch_idx: 13
+global_micro_batch_idx: 12
+2025-06-26 10:31:39.914	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 12
+global_micro_batch_idx: 15
+global_micro_batch_idx: 14
+2025-06-26 10:31:40.534	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 14
+global_micro_batch_idx: 17
+global_micro_batch_idx: 16
+2025-06-26 10:31:41.156	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 16
+global_micro_batch_idx: 18
+global_micro_batch_idx: 19
+2025-06-26 10:31:41.780	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 18
+global_micro_batch_idx: 21
+global_micro_batch_idx: 20
+2025-06-26 10:31:42.400	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 20
+global_micro_batch_idx: 22
+global_micro_batch_idx: 23
+2025-06-26 10:31:43.023	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 22
+global_micro_batch_idx: 25
+global_micro_batch_idx: 24
+2025-06-26 10:31:43.645	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 24
+global_micro_batch_idx: 27
+global_micro_batch_idx: 26
+2025-06-26 10:31:44.267	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 26
+global_micro_batch_idx: 29
+global_micro_batch_idx: 28
+2025-06-26 10:31:44.890	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 28
+global_micro_batch_idx: 31
+global_micro_batch_idx: 30
+2025-06-26 10:31:45.511	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 30
+global_micro_batch_idx: 33
+global_micro_batch_idx: 32
+2025-06-26 10:31:46.136	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 32
+global_micro_batch_idx: 35
+global_micro_batch_idx: 34
+2025-06-26 10:31:46.755	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 34
+global_micro_batch_idx: 37
+global_micro_batch_idx: 36
+2025-06-26 10:31:47.378	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 36
+global_micro_batch_idx: 38
+global_micro_batch_idx: 39
+2025-06-26 10:31:47.999	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 38
+global_micro_batch_idx: 41
+global_micro_batch_idx: 40
+2025-06-26 10:31:48.623	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 40
+global_micro_batch_idx: 42
+global_micro_batch_idx: 43
+2025-06-26 10:31:49.244	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 42
+global_micro_batch_idx: 45
+global_micro_batch_idx: 44
+2025-06-26 10:31:49.873	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 44
+global_micro_batch_idx: 47
+global_micro_batch_idx: 46
+2025-06-26 10:31:50.489	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 46
+global_micro_batch_idx: 49
+global_micro_batch_idx: 48
+2025-06-26 10:31:51.112	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 48
+global_micro_batch_idx: 50
+global_micro_batch_idx: 51
+2025-06-26 10:31:51.733	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 50
+global_micro_batch_idx: 53
+global_micro_batch_idx: 52
+2025-06-26 10:31:52.357	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 52
+global_micro_batch_idx: 55
+global_micro_batch_idx: 54
+2025-06-26 10:31:52.979	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 54
+global_micro_batch_idx: 57
+global_micro_batch_idx: 56
+2025-06-26 10:31:53.602	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 56
+global_micro_batch_idx: 58
+global_micro_batch_idx: 59
+2025-06-26 10:31:54.223	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 58
+global_micro_batch_idx: 61
+global_micro_batch_idx: 60
+2025-06-26 10:31:54.847	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 60
+global_micro_batch_idx: 63
+global_micro_batch_idx: 62
+2025-06-26 10:31:55.468	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 62
+global_micro_batch_idx: 65
+global_micro_batch_idx: 64
+2025-06-26 10:31:56.093	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 64
+global_micro_batch_idx: 67
+global_micro_batch_idx: 66
+2025-06-26 10:31:56.713	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 66
+global_micro_batch_idx: 69
+global_micro_batch_idx: 68
+2025-06-26 10:31:57.341	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 68
+global_micro_batch_idx: 70
+2025-06-26 10:31:57.958	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 70
+global_micro_batch_idx: 71
+global_micro_batch_idx: 73
+global_micro_batch_idx: 72
+2025-06-26 10:31:58.582	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 72
+global_micro_batch_idx: 75
+global_micro_batch_idx: 74
+2025-06-26 10:31:59.202	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 74
+global_micro_batch_idx: 77
+global_micro_batch_idx: 76
+2025-06-26 10:31:59.826	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 76
+global_micro_batch_idx: 78
+global_micro_batch_idx: 79
+2025-06-26 10:32:00.447	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 78
+global_micro_batch_idx: 81
+global_micro_batch_idx: 80
+2025-06-26 10:32:01.071	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 80
+global_micro_batch_idx: 82
+global_micro_batch_idx: 83
+2025-06-26 10:32:01.692	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 82
+global_micro_batch_idx: 85
+global_micro_batch_idx: 84
+2025-06-26 10:32:02.315	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 84
+global_micro_batch_idx: 86
+global_micro_batch_idx: 87
+2025-06-26 10:32:02.937	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 86
+global_micro_batch_idx: 89
+global_micro_batch_idx: 88
+2025-06-26 10:32:03.565	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 88
+global_micro_batch_idx: 91
+global_micro_batch_idx: 90
+2025-06-26 10:32:04.183	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 90
+global_micro_batch_idx: 93
+global_micro_batch_idx: 92
+2025-06-26 10:32:04.805	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 92
+global_micro_batch_idx: 95
+global_micro_batch_idx: 94
+2025-06-26 10:32:05.428	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 94
+global_micro_batch_idx: 97
+global_micro_batch_idx: 96
+2025-06-26 10:32:06.051	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 96
+global_micro_batch_idx: 99
+global_micro_batch_idx: 98
+2025-06-26 10:32:06.673	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 98
+global_micro_batch_idx: 101
+global_micro_batch_idx: 100
+2025-06-26 10:32:07.296	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 100
+global_micro_batch_idx: 103
+global_micro_batch_idx: 102
+2025-06-26 10:32:07.919	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 102
+global_micro_batch_idx: 105
+global_micro_batch_idx: 104
+2025-06-26 10:32:08.540	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 104
+global_micro_batch_idx: 107
+global_micro_batch_idx: 106
+2025-06-26 10:32:09.163	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 106
+global_micro_batch_idx: 109
+global_micro_batch_idx: 108
+2025-06-26 10:32:09.786	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 108
+global_micro_batch_idx: 111
+global_micro_batch_idx: 110
+2025-06-26 10:32:10.410	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 110
+global_micro_batch_idx: 113
+global_micro_batch_idx: 112
+2025-06-26 10:32:11.039	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 112
+global_micro_batch_idx: 115
+global_micro_batch_idx: 114
+2025-06-26 10:32:11.655	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 114
+global_micro_batch_idx: 117
+global_micro_batch_idx: 116
+2025-06-26 10:32:12.276	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 116
+global_micro_batch_idx: 119
+global_micro_batch_idx: 118
+2025-06-26 10:32:12.901	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 118
+global_micro_batch_idx: 120
+global_micro_batch_idx: 121
+2025-06-26 10:32:13.523	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 120
+global_micro_batch_idx: 123
+global_micro_batch_idx: 122
+2025-06-26 10:32:14.146	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 122
+global_micro_batch_idx: 125
+global_micro_batch_idx: 124
+2025-06-26 10:32:14.769	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 124
+global_micro_batch_idx: 127
+global_micro_batch_idx: 126
+2025-06-26 10:32:15.390	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 126
+global_micro_batch_idx: 129
+global_micro_batch_idx: 128
+2025-06-26 10:32:16.014	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 128
+global_micro_batch_idx: 131
+global_micro_batch_idx: 130
+2025-06-26 10:32:16.636	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 130
+global_micro_batch_idx: 133
+global_micro_batch_idx: 132
+2025-06-26 10:32:17.258	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 132
+global_micro_batch_idx: 134
+global_micro_batch_idx: 135
+2025-06-26 10:32:17.881	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 134
+global_micro_batch_idx: 137
+global_micro_batch_idx: 136
+2025-06-26 10:32:18.503	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 136
+global_micro_batch_idx: 139
+global_micro_batch_idx: 138
+2025-06-26 10:32:19.126	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 138
+global_micro_batch_idx: 140
+global_micro_batch_idx: 141
+2025-06-26 10:32:19.747	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 140
+global_micro_batch_idx: 143
+global_micro_batch_idx: 142
+2025-06-26 10:32:20.370	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 142
+global_micro_batch_idx: 145
+global_micro_batch_idx: 144
+2025-06-26 10:32:20.994	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 144
+global_micro_batch_idx: 147
+global_micro_batch_idx: 146
+2025-06-26 10:32:21.617	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 146
+global_micro_batch_idx: 149
+global_micro_batch_idx: 148
+2025-06-26 10:32:22.239	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 148
+global_micro_batch_idx: 151
+global_micro_batch_idx: 150
+2025-06-26 10:32:22.862	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 150
+global_micro_batch_idx: 153
+global_micro_batch_idx: 152
+2025-06-26 10:32:23.485	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 152
+global_micro_batch_idx: 155
+global_micro_batch_idx: 154
+2025-06-26 10:32:24.107	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 154
+global_micro_batch_idx: 157
+global_micro_batch_idx: 156
+2025-06-26 10:32:24.732	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 156
+global_micro_batch_idx: 159
+global_micro_batch_idx: 158
+2025-06-26 10:32:25.353	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 158
+global_micro_batch_idx: 161
+global_micro_batch_idx: 160
+2025-06-26 10:32:25.975	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 160
+global_micro_batch_idx: 163
+global_micro_batch_idx: 162
+2025-06-26 10:32:26.597	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 162
+global_micro_batch_idx: 165
+global_micro_batch_idx: 164
+2025-06-26 10:32:27.222	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 164
+global_micro_batch_idx: 167
+global_micro_batch_idx: 166
+2025-06-26 10:32:27.842	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 166
+global_micro_batch_idx: 169
+global_micro_batch_idx: 168
+2025-06-26 10:32:28.466	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 168
+global_micro_batch_idx: 171
+global_micro_batch_idx: 170
+2025-06-26 10:32:29.088	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 170
+global_micro_batch_idx: 173
+global_micro_batch_idx: 172
+2025-06-26 10:32:29.710	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 172
+global_micro_batch_idx: 175
+global_micro_batch_idx: 174
+2025-06-26 10:32:30.332	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 174
+global_micro_batch_idx: 177
+global_micro_batch_idx: 176
+2025-06-26 10:32:30.954	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 176
+global_micro_batch_idx: 179
+global_micro_batch_idx: 178
+2025-06-26 10:32:31.577	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 178
+global_micro_batch_idx: 180
+global_micro_batch_idx: 181
+2025-06-26 10:32:32.199	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 180
+global_micro_batch_idx: 183
+global_micro_batch_idx: 182
+2025-06-26 10:32:32.823	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 182
+global_micro_batch_idx: 185
+global_micro_batch_idx: 184
+2025-06-26 10:32:33.445	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 184
+global_micro_batch_idx: 187
+global_micro_batch_idx: 186
+2025-06-26 10:32:34.069	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 186
+global_micro_batch_idx: 189
+global_micro_batch_idx: 188
+2025-06-26 10:32:34.690	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 188
+global_micro_batch_idx: 191
+global_micro_batch_idx: 190
+2025-06-26 10:32:35.313	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 190
+global_micro_batch_idx: 193
+global_micro_batch_idx: 192
+2025-06-26 10:32:35.936	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 192
+global_micro_batch_idx: 195
+global_micro_batch_idx: 194
+2025-06-26 10:32:36.559	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 194
+global_micro_batch_idx: 197
+global_micro_batch_idx: 196
+2025-06-26 10:32:37.181	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 196
+global_micro_batch_idx: 199
+global_micro_batch_idx: 198
+2025-06-26 10:32:37.804	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 198
+global_micro_batch_idx: 201
+global_micro_batch_idx: 200
+2025-06-26 10:32:38.426	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 200
+global_micro_batch_idx: 203
+global_micro_batch_idx: 202
+2025-06-26 10:32:39.049	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 202
+global_micro_batch_idx: 205
+global_micro_batch_idx: 204
+2025-06-26 10:32:39.672	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 204
+global_micro_batch_idx: 207
+global_micro_batch_idx: 206
+2025-06-26 10:32:40.294	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 206
+global_micro_batch_idx: 209
+global_micro_batch_idx: 208
+2025-06-26 10:32:40.916	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 208
+global_micro_batch_idx: 211
+global_micro_batch_idx: 210
+2025-06-26 10:32:41.540	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 210
+global_micro_batch_idx: 213
+global_micro_batch_idx: 212
+2025-06-26 10:32:42.162	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 212
+global_micro_batch_idx: 215
+global_micro_batch_idx: 214
+2025-06-26 10:32:42.785	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 214
+global_micro_batch_idx: 217
+global_micro_batch_idx: 216
+2025-06-26 10:32:43.408	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 216
+global_micro_batch_idx: 219
+global_micro_batch_idx: 218
+2025-06-26 10:32:44.030	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 218
+global_micro_batch_idx: 221
+global_micro_batch_idx: 220
+2025-06-26 10:32:44.653	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 220
+global_micro_batch_idx: 223
+global_micro_batch_idx: 222
+2025-06-26 10:32:45.276	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 222
+global_micro_batch_idx: 225
+global_micro_batch_idx: 224
+2025-06-26 10:32:45.899	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 224
+global_micro_batch_idx: 227
+global_micro_batch_idx: 226
+2025-06-26 10:32:46.520	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 226
+global_micro_batch_idx: 228
+global_micro_batch_idx: 229
+2025-06-26 10:32:47.143	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 228
+global_micro_batch_idx: 231
+global_micro_batch_idx: 230
+2025-06-26 10:32:47.767	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 230
+global_micro_batch_idx: 233
+global_micro_batch_idx: 232
+2025-06-26 10:32:48.389	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 232
+global_micro_batch_idx: 235
+global_micro_batch_idx: 234
+2025-06-26 10:32:49.012	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 234
+global_micro_batch_idx: 236
+global_micro_batch_idx: 237
+2025-06-26 10:32:49.635	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 236
+global_micro_batch_idx: 238
+global_micro_batch_idx: 239
+2025-06-26 10:32:50.258	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 238
+global_micro_batch_idx: 241
+global_micro_batch_idx: 240
+2025-06-26 10:32:50.888	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 240
+global_micro_batch_idx: 243
+global_micro_batch_idx: 242
+2025-06-26 10:32:51.503	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 242
+global_micro_batch_idx: 245
+global_micro_batch_idx: 244
+2025-06-26 10:32:52.125	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 244
+global_micro_batch_idx: 246
+global_micro_batch_idx: 247
+2025-06-26 10:32:52.748	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 246
+global_micro_batch_idx: 249
+global_micro_batch_idx: 248
+2025-06-26 10:32:53.371	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 248
+global_micro_batch_idx: 251
+global_micro_batch_idx: 250
+2025-06-26 10:32:53.993	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 250
+global_micro_batch_idx: 253
+global_micro_batch_idx: 252
+2025-06-26 10:32:54.617	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 252
+global_micro_batch_idx: 255
+global_micro_batch_idx: 254
+2025-06-26 10:32:55.242	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 254
+2025-06-26 10:32:56.562	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:1017	INFO	[step=1/3,epoch=0]
+    train/masked_instances_local_rank=0
+    optim/total_grad_norm=3.027
+    train/CrossEntropyLoss=11.91
+    train/Perplexity=148,070
+    train/ZLoss=0.0142
+    throughput/total_tokens=2,097,152
+    throughput/total_training_Gflops=11,857,970
+    throughput/total_training_log_Gflops=16.29
+    System/Peak GPU Memory (MB)=52,437
+global_micro_batch_idx: 1
+global_micro_batch_idx: 0
+2025-06-26 10:32:56.568	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 0
+global_micro_batch_idx: 3
+global_micro_batch_idx: 2
+2025-06-26 10:32:56.954	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 2
+global_micro_batch_idx: 5
+global_micro_batch_idx: 4
+2025-06-26 10:32:57.573	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 4
+global_micro_batch_idx: 7
+global_micro_batch_idx: 6
+2025-06-26 10:32:58.196	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 6
+global_micro_batch_idx: 9
+global_micro_batch_idx: 8
+2025-06-26 10:32:58.818	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 8
+global_micro_batch_idx: 11
+global_micro_batch_idx: 10
+2025-06-26 10:32:59.442	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 10
+global_micro_batch_idx: 12
+global_micro_batch_idx: 13
+2025-06-26 10:33:00.064	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 12
+global_micro_batch_idx: 14
+2025-06-26 10:33:00.690	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 14
+global_micro_batch_idx: 15
+global_micro_batch_idx: 17
+global_micro_batch_idx: 16
+2025-06-26 10:33:01.311	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 16
+global_micro_batch_idx: 19
+global_micro_batch_idx: 18
+2025-06-26 10:33:01.933	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 18
+global_micro_batch_idx: 21
+global_micro_batch_idx: 20
+2025-06-26 10:33:02.556	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 20
+global_micro_batch_idx: 22
+global_micro_batch_idx: 23
+2025-06-26 10:33:03.178	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 22
+global_micro_batch_idx: 25
+global_micro_batch_idx: 24
+2025-06-26 10:33:03.802	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 24
+global_micro_batch_idx: 27
+global_micro_batch_idx: 26
+2025-06-26 10:33:04.425	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 26
+global_micro_batch_idx: 29
+global_micro_batch_idx: 28
+2025-06-26 10:33:05.047	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 28
+global_micro_batch_idx: 30
+global_micro_batch_idx: 31
+2025-06-26 10:33:05.670	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 30
+global_micro_batch_idx: 32
+global_micro_batch_idx: 33
+2025-06-26 10:33:06.292	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 32
+global_micro_batch_idx: 35
+global_micro_batch_idx: 34
+2025-06-26 10:33:06.916	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 34
+global_micro_batch_idx: 37
+global_micro_batch_idx: 36
+2025-06-26 10:33:07.539	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 36
+global_micro_batch_idx: 39
+global_micro_batch_idx: 38
+2025-06-26 10:33:08.162	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 38
+global_micro_batch_idx: 41
+global_micro_batch_idx: 40
+2025-06-26 10:33:08.784	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 40
+global_micro_batch_idx: 43
+global_micro_batch_idx: 42
+2025-06-26 10:33:09.407	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 42
+global_micro_batch_idx: 45
+global_micro_batch_idx: 44
+2025-06-26 10:33:10.030	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 44
+global_micro_batch_idx: 47
+global_micro_batch_idx: 46
+2025-06-26 10:33:10.653	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 46
+global_micro_batch_idx: 49
+global_micro_batch_idx: 48
+2025-06-26 10:33:11.276	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 48
+global_micro_batch_idx: 51
+global_micro_batch_idx: 50
+2025-06-26 10:33:11.899	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 50
+global_micro_batch_idx: 52
+global_micro_batch_idx: 53
+2025-06-26 10:33:12.523	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 52
+global_micro_batch_idx: 55
+global_micro_batch_idx: 54
+2025-06-26 10:33:13.147	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 54
+global_micro_batch_idx: 57
+global_micro_batch_idx: 56
+2025-06-26 10:33:13.768	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 56
+global_micro_batch_idx: 59
+global_micro_batch_idx: 58
+2025-06-26 10:33:14.390	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 58
+global_micro_batch_idx: 61
+global_micro_batch_idx: 60
+2025-06-26 10:33:15.014	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 60
+global_micro_batch_idx: 63
+global_micro_batch_idx: 62
+2025-06-26 10:33:15.636	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 62
+global_micro_batch_idx: 65
+global_micro_batch_idx: 64
+2025-06-26 10:33:16.259	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 64
+global_micro_batch_idx: 67
+global_micro_batch_idx: 66
+2025-06-26 10:33:16.882	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 66
+global_micro_batch_idx: 69
+global_micro_batch_idx: 68
+2025-06-26 10:33:17.505	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 68
+global_micro_batch_idx: 71
+global_micro_batch_idx: 70
+2025-06-26 10:33:18.128	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 70
+global_micro_batch_idx: 73
+global_micro_batch_idx: 72
+2025-06-26 10:33:18.751	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 72
+global_micro_batch_idx: 75
+global_micro_batch_idx: 74
+2025-06-26 10:33:19.376	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 74
+global_micro_batch_idx: 77
+global_micro_batch_idx: 76
+2025-06-26 10:33:19.998	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 76
+global_micro_batch_idx: 79
+global_micro_batch_idx: 78
+2025-06-26 10:33:20.620	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 78
+global_micro_batch_idx: 81
+global_micro_batch_idx: 80
+2025-06-26 10:33:21.243	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 80
+global_micro_batch_idx: 83
+global_micro_batch_idx: 82
+2025-06-26 10:33:21.866	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 82
+global_micro_batch_idx: 85
+global_micro_batch_idx: 84
+2025-06-26 10:33:22.489	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 84
+global_micro_batch_idx: 87
+global_micro_batch_idx: 86
+2025-06-26 10:33:23.112	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 86
+global_micro_batch_idx: 89
+global_micro_batch_idx: 88
+2025-06-26 10:33:23.735	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 88
+global_micro_batch_idx: 90
+2025-06-26 10:33:24.359	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 90
+global_micro_batch_idx: 91
+global_micro_batch_idx: 93
+global_micro_batch_idx: 92
+2025-06-26 10:33:24.981	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 92
+global_micro_batch_idx: 95
+global_micro_batch_idx: 94
+2025-06-26 10:33:25.604	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 94
+global_micro_batch_idx: 97
+global_micro_batch_idx: 96
+2025-06-26 10:33:26.227	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 96
+global_micro_batch_idx: 99
+global_micro_batch_idx: 98
+2025-06-26 10:33:26.850	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 98
+global_micro_batch_idx: 100
+global_micro_batch_idx: 101
+2025-06-26 10:33:27.472	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 100
+global_micro_batch_idx: 103
+global_micro_batch_idx: 102
+2025-06-26 10:33:28.096	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 102
+global_micro_batch_idx: 105
+global_micro_batch_idx: 104
+2025-06-26 10:33:28.719	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 104
+global_micro_batch_idx: 107
+global_micro_batch_idx: 106
+2025-06-26 10:33:29.342	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 106
+global_micro_batch_idx: 109
+global_micro_batch_idx: 108
+2025-06-26 10:33:29.969	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 108
+global_micro_batch_idx: 111
+global_micro_batch_idx: 110
+2025-06-26 10:33:30.589	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 110
+global_micro_batch_idx: 113
+global_micro_batch_idx: 112
+2025-06-26 10:33:31.211	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 112
+global_micro_batch_idx: 115
+global_micro_batch_idx: 114
+2025-06-26 10:33:31.834	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 114
+global_micro_batch_idx: 117
+global_micro_batch_idx: 116
+2025-06-26 10:33:32.458	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 116
+global_micro_batch_idx: 119
+global_micro_batch_idx: 118
+2025-06-26 10:33:33.080	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 118
+global_micro_batch_idx: 121
+global_micro_batch_idx: 120
+2025-06-26 10:33:33.704	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 120
+global_micro_batch_idx: 123
+global_micro_batch_idx: 122
+2025-06-26 10:33:34.327	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 122
+global_micro_batch_idx: 125
+global_micro_batch_idx: 124
+2025-06-26 10:33:34.952	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 124
+global_micro_batch_idx: 127
+global_micro_batch_idx: 126
+2025-06-26 10:33:35.572	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 126
+global_micro_batch_idx: 129
+global_micro_batch_idx: 128
+2025-06-26 10:33:36.195	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 128
+global_micro_batch_idx: 131
+global_micro_batch_idx: 130
+2025-06-26 10:33:36.819	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 130
+global_micro_batch_idx: 133
+global_micro_batch_idx: 132
+2025-06-26 10:33:37.441	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 132
+global_micro_batch_idx: 135
+global_micro_batch_idx: 134
+2025-06-26 10:33:38.063	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 134
+global_micro_batch_idx: 137
+global_micro_batch_idx: 136
+2025-06-26 10:33:38.687	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 136
+global_micro_batch_idx: 138
+global_micro_batch_idx: 139
+2025-06-26 10:33:39.310	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 138
+global_micro_batch_idx: 141
+global_micro_batch_idx: 140
+2025-06-26 10:33:39.932	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 140
+global_micro_batch_idx: 143
+global_micro_batch_idx: 142
+2025-06-26 10:33:40.556	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 142
+global_micro_batch_idx: 145
+global_micro_batch_idx: 144
+2025-06-26 10:33:41.178	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 144
+global_micro_batch_idx: 147
+global_micro_batch_idx: 146
+2025-06-26 10:33:41.801	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 146
+global_micro_batch_idx: 149
+global_micro_batch_idx: 148
+2025-06-26 10:33:42.424	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 148
+global_micro_batch_idx: 151
+global_micro_batch_idx: 150
+2025-06-26 10:33:43.048	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 150
+global_micro_batch_idx: 153
+global_micro_batch_idx: 152
+2025-06-26 10:33:43.671	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 152
+global_micro_batch_idx: 154
+global_micro_batch_idx: 155
+2025-06-26 10:33:44.293	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 154
+global_micro_batch_idx: 157
+global_micro_batch_idx: 156
+2025-06-26 10:33:44.916	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 156
+global_micro_batch_idx: 159
+global_micro_batch_idx: 158
+2025-06-26 10:33:45.540	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 158
+global_micro_batch_idx: 161
+global_micro_batch_idx: 160
+2025-06-26 10:33:46.163	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 160
+global_micro_batch_idx: 163
+global_micro_batch_idx: 162
+2025-06-26 10:33:46.786	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 162
+global_micro_batch_idx: 165
+global_micro_batch_idx: 164
+2025-06-26 10:33:47.409	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 164
+global_micro_batch_idx: 167
+global_micro_batch_idx: 166
+2025-06-26 10:33:48.032	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 166
+global_micro_batch_idx: 169
+global_micro_batch_idx: 168
+2025-06-26 10:33:48.653	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 168
+global_micro_batch_idx: 171
+global_micro_batch_idx: 170
+2025-06-26 10:33:49.277	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 170
+global_micro_batch_idx: 173
+global_micro_batch_idx: 172
+2025-06-26 10:33:49.899	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 172
+global_micro_batch_idx: 175
+global_micro_batch_idx: 174
+2025-06-26 10:33:50.522	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 174
+global_micro_batch_idx: 177
+global_micro_batch_idx: 176
+2025-06-26 10:33:51.145	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 176
+global_micro_batch_idx: 178
+2025-06-26 10:33:51.768	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 178
+global_micro_batch_idx: 179
+global_micro_batch_idx: 181global_micro_batch_idx:
+ 180
+2025-06-26 10:33:52.392	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 180
+global_micro_batch_idx: 183
+global_micro_batch_idx: 182
+2025-06-26 10:33:53.017	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 182
+global_micro_batch_idx: 184
+global_micro_batch_idx: 185
+2025-06-26 10:33:53.638	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 184
+global_micro_batch_idx: 187
+global_micro_batch_idx: 186
+2025-06-26 10:33:54.260	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 186
+global_micro_batch_idx: 188
+global_micro_batch_idx: 189
+2025-06-26 10:33:54.883	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 188
+global_micro_batch_idx: 190
+global_micro_batch_idx: 191
+2025-06-26 10:33:55.506	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 190
+global_micro_batch_idx: 193
+global_micro_batch_idx: 192
+2025-06-26 10:33:56.129	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 192
+global_micro_batch_idx:global_micro_batch_idx: 194
+ 195
+2025-06-26 10:33:56.753	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 194
+global_micro_batch_idx: 197
+global_micro_batch_idx: 196
+2025-06-26 10:33:57.375	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 196
+global_micro_batch_idx: 199
+global_micro_batch_idx: 198
+2025-06-26 10:33:57.998	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 198
+global_micro_batch_idx: 201
+global_micro_batch_idx: 200
+2025-06-26 10:33:58.622	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 200
+global_micro_batch_idx: 203
+global_micro_batch_idx: 202
+2025-06-26 10:33:59.245	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 202
+global_micro_batch_idx: 205
+global_micro_batch_idx: 204
+2025-06-26 10:33:59.868	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 204
+global_micro_batch_idx: 207
+global_micro_batch_idx: 206
+2025-06-26 10:34:00.490	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 206
+global_micro_batch_idx: 208
+global_micro_batch_idx: 209
+2025-06-26 10:34:01.113	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 208
+global_micro_batch_idx: 210
+global_micro_batch_idx: 211
+2025-06-26 10:34:01.737	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 210
+global_micro_batch_idx: 213
+global_micro_batch_idx: 212
+2025-06-26 10:34:02.360	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 212
+global_micro_batch_idx: 215
+global_micro_batch_idx: 214
+2025-06-26 10:34:02.982	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 214
+global_micro_batch_idx: 217
+global_micro_batch_idx: 216
+2025-06-26 10:34:03.606	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 216
+global_micro_batch_idx: 219
+global_micro_batch_idx: 218
+2025-06-26 10:34:04.229	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 218
+global_micro_batch_idx: 221
+global_micro_batch_idx: 220
+2025-06-26 10:34:04.853	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 220
+global_micro_batch_idx: 223
+global_micro_batch_idx: 222
+2025-06-26 10:34:05.476	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 222
+global_micro_batch_idx: 225
+global_micro_batch_idx: 224
+2025-06-26 10:34:06.099	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 224
+global_micro_batch_idx: 227
+global_micro_batch_idx: 226
+2025-06-26 10:34:06.723	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 226
+global_micro_batch_idx: 229
+global_micro_batch_idx: 228
+2025-06-26 10:34:07.345	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 228
+global_micro_batch_idx: 231
+global_micro_batch_idx: 230
+2025-06-26 10:34:07.968	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 230
+global_micro_batch_idx: 233
+global_micro_batch_idx: 232
+2025-06-26 10:34:08.594	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 232
+global_micro_batch_idx: 235
+global_micro_batch_idx: 234
+2025-06-26 10:34:09.217	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 234
+global_micro_batch_idx: 236
+global_micro_batch_idx: 237
+2025-06-26 10:34:09.839	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 236
+global_micro_batch_idx: 239
+global_micro_batch_idx: 238
+2025-06-26 10:34:10.465	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 238
+global_micro_batch_idx: 240
+2025-06-26 10:34:11.085	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 240
+global_micro_batch_idx: 241
+global_micro_batch_idx: 243
+global_micro_batch_idx: 242
+2025-06-26 10:34:11.708	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 242
+global_micro_batch_idx: 245
+global_micro_batch_idx: 244
+2025-06-26 10:34:12.331	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 244
+global_micro_batch_idx: 247
+global_micro_batch_idx: 246
+2025-06-26 10:34:12.958	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 246
+global_micro_batch_idx: 249
+global_micro_batch_idx: 248
+2025-06-26 10:34:13.578	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 248
+global_micro_batch_idx: 251
+global_micro_batch_idx: 250
+2025-06-26 10:34:14.200	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 250
+global_micro_batch_idx: 253
+global_micro_batch_idx: 252
+2025-06-26 10:34:14.824	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 252
+global_micro_batch_idx: 255
+global_micro_batch_idx: 254
+2025-06-26 10:34:15.446	holygpu8a25406.rc.fas.harvard.edu:0	olmo.model:1966	INFO	Adding Gaussian noise to input embeddings with std 0.001 and seed 254
+global_micro_batch_idx: 1
+2025-06-26 10:34:16.466	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:1017	INFO	[step=2/3,epoch=0]
+    train/masked_instances_local_rank=1.0000
+    optim/total_grad_norm=3.001
+    train/CrossEntropyLoss=11.84
+    train/Perplexity=138,734
+    train/ZLoss=0.0141
+    throughput/total_tokens=4,194,304
+    throughput/total_training_Gflops=23,715,941
+    throughput/total_training_log_Gflops=16.98
+    throughput/device/tokens_per_second=13,123
+    throughput/device/batches_per_second=0.0125
+    System/Peak GPU Memory (MB)=52,437
+global_micro_batch_idx: 0
+global_micro_batch_idx: 2
+global_micro_batch_idx: 3
+global_micro_batch_idx: 5
+global_micro_batch_idx: 4
+global_micro_batch_idx: 7
+global_micro_batch_idx: 6
+global_micro_batch_idx: 9
+global_micro_batch_idx: 8
+global_micro_batch_idx: 11
+global_micro_batch_idx: 10
+global_micro_batch_idx: 13
+global_micro_batch_idx: 12
+global_micro_batch_idx: 15
+global_micro_batch_idx: 14
+global_micro_batch_idx: 16
+global_micro_batch_idx: 17
+global_micro_batch_idx: 19
+global_micro_batch_idx: 18
+global_micro_batch_idx: 21
+global_micro_batch_idx: 20
+global_micro_batch_idx: 23
+global_micro_batch_idx: 22
+global_micro_batch_idx: 25
+global_micro_batch_idx: 24
+global_micro_batch_idx: 27
+global_micro_batch_idx: 26
+global_micro_batch_idx: 29
+global_micro_batch_idx: 28
+global_micro_batch_idx: 31
+global_micro_batch_idx: 30
+global_micro_batch_idx: 33
+global_micro_batch_idx: 32
+global_micro_batch_idx: 35
+global_micro_batch_idx: 34
+global_micro_batch_idx: 37
+global_micro_batch_idx: 36
+global_micro_batch_idx: 39
+global_micro_batch_idx: 38
+global_micro_batch_idx: 41
+global_micro_batch_idx: 40
+global_micro_batch_idx: 42
+global_micro_batch_idx: 43
+global_micro_batch_idx: 45
+global_micro_batch_idx: 44
+global_micro_batch_idx: 47
+global_micro_batch_idx: 46
+global_micro_batch_idx: 49
+global_micro_batch_idx: 48
+global_micro_batch_idx: 51
+global_micro_batch_idx: 50
+global_micro_batch_idx: 53
+global_micro_batch_idx: 52
+global_micro_batch_idx: 55
+global_micro_batch_idx: 54
+global_micro_batch_idx: 57
+global_micro_batch_idx: 56
+global_micro_batch_idx: 59
+global_micro_batch_idx: 58
+global_micro_batch_idx: 61
+global_micro_batch_idx: 60
+global_micro_batch_idx: 63
+global_micro_batch_idx: 62
+global_micro_batch_idx: 64
+global_micro_batch_idx: 65
+global_micro_batch_idx: 67
+global_micro_batch_idx: 66
+global_micro_batch_idx: 69
+global_micro_batch_idx: 68
+global_micro_batch_idx: 71
+global_micro_batch_idx: 70
+global_micro_batch_idx: 73
+global_micro_batch_idx: 72
+global_micro_batch_idx: 75
+global_micro_batch_idx: 74
+global_micro_batch_idx: 77
+global_micro_batch_idx: 76
+global_micro_batch_idx: 79
+global_micro_batch_idx: 78
+global_micro_batch_idx: 81
+global_micro_batch_idx: 80
+global_micro_batch_idx: 83
+global_micro_batch_idx: 82
+global_micro_batch_idx: 85
+global_micro_batch_idx: 84
+global_micro_batch_idx: 86
+global_micro_batch_idx: 87
+global_micro_batch_idx: 89
+global_micro_batch_idx: 88
+global_micro_batch_idx: 90
+global_micro_batch_idx: 91
+global_micro_batch_idx: 93
+global_micro_batch_idx: 92
+global_micro_batch_idx: 95
+global_micro_batch_idx: 94
+global_micro_batch_idx: 96
+global_micro_batch_idx: 97
+global_micro_batch_idx: 99
+global_micro_batch_idx: 98
+global_micro_batch_idx: 101
+global_micro_batch_idx: 100
+global_micro_batch_idx: 103
+global_micro_batch_idx: 102
+global_micro_batch_idx: 105
+global_micro_batch_idx: 104
+global_micro_batch_idx: 107
+global_micro_batch_idx: 106
+global_micro_batch_idx: 109
+global_micro_batch_idx: 108
+global_micro_batch_idx: 111
+global_micro_batch_idx: 110
+global_micro_batch_idx: 113
+global_micro_batch_idx: 112
+global_micro_batch_idx: 115
+global_micro_batch_idx: 114
+global_micro_batch_idx: 117
+global_micro_batch_idx: 116
+global_micro_batch_idx: 119
+global_micro_batch_idx: 118
+global_micro_batch_idx: 121
+global_micro_batch_idx: 120
+global_micro_batch_idx: 123
+global_micro_batch_idx: 122
+global_micro_batch_idx: 125
+global_micro_batch_idx: 124
+global_micro_batch_idx: 127
+global_micro_batch_idx: 126
+global_micro_batch_idx: 129
+global_micro_batch_idx: 128
+global_micro_batch_idx: 131
+global_micro_batch_idx: 130
+global_micro_batch_idx: 133
+global_micro_batch_idx: 132
+global_micro_batch_idx: 135
+global_micro_batch_idx: 134
+global_micro_batch_idx: 137
+global_micro_batch_idx: 136
+global_micro_batch_idx: 139
+global_micro_batch_idx: 138
+global_micro_batch_idx: 141
+global_micro_batch_idx: 140
+global_micro_batch_idx: 143
+global_micro_batch_idx: 142
+global_micro_batch_idx: 145
+global_micro_batch_idx: 144
+global_micro_batch_idx: 147
+global_micro_batch_idx: 146
+global_micro_batch_idx: 149
+global_micro_batch_idx: 148
+global_micro_batch_idx: 151
+global_micro_batch_idx: 150
+global_micro_batch_idx: 153
+global_micro_batch_idx: 152
+global_micro_batch_idx: 155
+global_micro_batch_idx: 154
+global_micro_batch_idx: 157
+global_micro_batch_idx: 156
+global_micro_batch_idx: 159
+global_micro_batch_idx: 158
+global_micro_batch_idx: 161
+global_micro_batch_idx: 160
+global_micro_batch_idx: 163
+global_micro_batch_idx: 162
+global_micro_batch_idx: 165
+global_micro_batch_idx: 164
+global_micro_batch_idx: 167
+global_micro_batch_idx: 166
+global_micro_batch_idx: 169
+global_micro_batch_idx: 168
+global_micro_batch_idx: 171
+global_micro_batch_idx: 170
+global_micro_batch_idx: 173
+global_micro_batch_idx: 172
+global_micro_batch_idx: 175
+global_micro_batch_idx: 174
+global_micro_batch_idx: 177
+global_micro_batch_idx: 176
+global_micro_batch_idx: 179
+global_micro_batch_idx: 178
+global_micro_batch_idx: 181
+global_micro_batch_idx: 180
+global_micro_batch_idx: 183
+global_micro_batch_idx: 182
+global_micro_batch_idx: 185
+global_micro_batch_idx: 184
+global_micro_batch_idx: 187
+global_micro_batch_idx: 186
+global_micro_batch_idx: 189
+global_micro_batch_idx: 188
+global_micro_batch_idx: 191
+global_micro_batch_idx: 190
+global_micro_batch_idx: 193
+global_micro_batch_idx: 192
+global_micro_batch_idx: 195
+global_micro_batch_idx: 194
+global_micro_batch_idx: 197
+global_micro_batch_idx: 196
+global_micro_batch_idx: 198
+global_micro_batch_idx: 199
+global_micro_batch_idx: 201
+global_micro_batch_idx: 200
+global_micro_batch_idx: 203
+global_micro_batch_idx: 202
+global_micro_batch_idx: 205
+global_micro_batch_idx: 204
+global_micro_batch_idx: 207
+global_micro_batch_idx: 206
+global_micro_batch_idx: 209
+global_micro_batch_idx: 208
+global_micro_batch_idx: 211
+global_micro_batch_idx: 210
+global_micro_batch_idx: 213
+global_micro_batch_idx: 212
+global_micro_batch_idx: 215
+global_micro_batch_idx: 214
+global_micro_batch_idx: 217
+global_micro_batch_idx: 216
+global_micro_batch_idx: 219
+global_micro_batch_idx: 218
+global_micro_batch_idx: 221
+global_micro_batch_idx: 220
+global_micro_batch_idx: 222
+global_micro_batch_idx: 223
+global_micro_batch_idx:global_micro_batch_idx: 225
+ 224
+global_micro_batch_idx: 227
+global_micro_batch_idx: 226
+global_micro_batch_idx: 229
+global_micro_batch_idx: 228
+global_micro_batch_idx: 231
+global_micro_batch_idx: 230
+global_micro_batch_idx: 233
+global_micro_batch_idx: 232
+global_micro_batch_idx: 235
+global_micro_batch_idx: 234
+global_micro_batch_idx: 237
+global_micro_batch_idx: 236
+global_micro_batch_idx: 239
+global_micro_batch_idx: 238
+global_micro_batch_idx: 241
+global_micro_batch_idx: 240
+global_micro_batch_idx: 243
+global_micro_batch_idx: 242
+global_micro_batch_idx: 245
+global_micro_batch_idx: 244
+global_micro_batch_idx: 247
+global_micro_batch_idx: 246
+global_micro_batch_idx: 249
+global_micro_batch_idx: 248
+global_micro_batch_idx: 251
+global_micro_batch_idx: 250
+global_micro_batch_idx: 253
+global_micro_batch_idx: 252
+global_micro_batch_idx: 255
+global_micro_batch_idx: 254
+2025-06-26 10:35:36.367	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:1017	INFO	[step=3/3,epoch=0]
+    train/masked_instances_local_rank=5.000
+    optim/total_grad_norm=3.071
+    train/CrossEntropyLoss=11.71
+    train/Perplexity=121,574
+    train/ZLoss=0.0139
+    throughput/total_tokens=6,291,456
+    throughput/total_training_Gflops=35,573,912
+    throughput/total_training_log_Gflops=17.39
+    throughput/device/tokens_per_second=13,123
+    throughput/device/batches_per_second=0.0125
+global_micro_batch_idx: 0
+global_micro_batch_idx: 1
+global_micro_batch_idx: 3
+global_micro_batch_idx: 2
+global_micro_batch_idx: 5
+global_micro_batch_idx: 4
+global_micro_batch_idx: 7
+global_micro_batch_idx: 6
+global_micro_batch_idx: 9
+global_micro_batch_idx: 8
+global_micro_batch_idx: 11
+global_micro_batch_idx: 10
+global_micro_batch_idx: 13
+global_micro_batch_idx: 12
+global_micro_batch_idx: 15
+global_micro_batch_idx: 14
+global_micro_batch_idx: 17
+global_micro_batch_idx: 16
+global_micro_batch_idx: 19
+global_micro_batch_idx: 18
+global_micro_batch_idx: 21
+global_micro_batch_idx: 20
+global_micro_batch_idx: 23
+global_micro_batch_idx: 22
+global_micro_batch_idx: 25
+global_micro_batch_idx: 24
+global_micro_batch_idx: 27
+global_micro_batch_idx: 26
+global_micro_batch_idx: 29
+global_micro_batch_idx: 28
+global_micro_batch_idx: 31
+global_micro_batch_idx: 30
+global_micro_batch_idx: 33
+global_micro_batch_idx: 32
+global_micro_batch_idx: 35
+global_micro_batch_idx: 34
+global_micro_batch_idx: 37
+global_micro_batch_idx: 36
+global_micro_batch_idx: 39
+global_micro_batch_idx: 38
+global_micro_batch_idx: 41
+global_micro_batch_idx: 40
+global_micro_batch_idx: 43
+global_micro_batch_idx: 42
+global_micro_batch_idx: 45
+global_micro_batch_idx: 44
+global_micro_batch_idx: 47
+global_micro_batch_idx: 46
+global_micro_batch_idx: 49
+global_micro_batch_idx: 48
+global_micro_batch_idx: 51
+global_micro_batch_idx: 50
+global_micro_batch_idx: 53
+global_micro_batch_idx: 52
+global_micro_batch_idx: 55
+global_micro_batch_idx: 54
+global_micro_batch_idx: 57
+global_micro_batch_idx: 56
+global_micro_batch_idx: 59
+global_micro_batch_idx: 58
+global_micro_batch_idx: 61
+global_micro_batch_idx: 60
+global_micro_batch_idx: 63
+global_micro_batch_idx: 62
+global_micro_batch_idx: 65
+global_micro_batch_idx: 64
+global_micro_batch_idx: 67
+global_micro_batch_idx: 66
+global_micro_batch_idx: 69
+global_micro_batch_idx: 68
+global_micro_batch_idx: 71
+global_micro_batch_idx: 70
+global_micro_batch_idx: 73
+global_micro_batch_idx: 72
+global_micro_batch_idx: 75
+global_micro_batch_idx: 74
+global_micro_batch_idx: 77
+global_micro_batch_idx: 76
+global_micro_batch_idx: 79
+global_micro_batch_idx: 78
+global_micro_batch_idx: 81
+global_micro_batch_idx: 80
+global_micro_batch_idx: 83
+global_micro_batch_idx: 82
+global_micro_batch_idx: 85
+global_micro_batch_idx: 84
+global_micro_batch_idx: 87
+global_micro_batch_idx: 86
+global_micro_batch_idx: 89
+global_micro_batch_idx: 88
+global_micro_batch_idx: 91
+global_micro_batch_idx: 90
+global_micro_batch_idx: 93
+global_micro_batch_idx: 92
+global_micro_batch_idx: 95
+global_micro_batch_idx: 94
+global_micro_batch_idx: 97
+global_micro_batch_idx: 96
+global_micro_batch_idx: 99
+global_micro_batch_idx: 98
+global_micro_batch_idx: 101
+global_micro_batch_idx: 100
+global_micro_batch_idx: 103
+global_micro_batch_idx: 102
+global_micro_batch_idx: 105
+global_micro_batch_idx: 104
+global_micro_batch_idx: 107
+global_micro_batch_idx: 106
+global_micro_batch_idx: 109
+global_micro_batch_idx: 108
+global_micro_batch_idx: 111
+global_micro_batch_idx: 110
+global_micro_batch_idx: 113
+global_micro_batch_idx: 112
+global_micro_batch_idx: 115
+global_micro_batch_idx: 114
+global_micro_batch_idx: 117
+global_micro_batch_idx: 116
+global_micro_batch_idx: 119
+global_micro_batch_idx: 118
+global_micro_batch_idx: 121
+global_micro_batch_idx: 120
+global_micro_batch_idx: 123
+global_micro_batch_idx: 122
+global_micro_batch_idx: 125
+global_micro_batch_idx: 124
+global_micro_batch_idx: 127
+global_micro_batch_idx: 126
+global_micro_batch_idx: 129
+global_micro_batch_idx: 128
+global_micro_batch_idx: 131
+global_micro_batch_idx: 130
+global_micro_batch_idx: 133
+global_micro_batch_idx: 132
+global_micro_batch_idx: 135
+global_micro_batch_idx: 134
+global_micro_batch_idx: 137
+global_micro_batch_idx: 136
+global_micro_batch_idx: 139
+global_micro_batch_idx: 138
+global_micro_batch_idx:global_micro_batch_idx: 140
+ 141
+global_micro_batch_idx: 143
+global_micro_batch_idx: 142
+global_micro_batch_idx: 145
+global_micro_batch_idx: 144
+global_micro_batch_idx: 147
+global_micro_batch_idx: 146
+global_micro_batch_idx: 149
+global_micro_batch_idx: 148
+global_micro_batch_idx: 151
+global_micro_batch_idx: 150
+global_micro_batch_idx: 153
+global_micro_batch_idx: 152
+global_micro_batch_idx: 155
+global_micro_batch_idx: 154
+global_micro_batch_idx: 157
+global_micro_batch_idx: 156
+global_micro_batch_idx: 159
+global_micro_batch_idx: 158
+global_micro_batch_idx: 161
+global_micro_batch_idx: 160
+global_micro_batch_idx: 163
+global_micro_batch_idx: 162
+global_micro_batch_idx: 165
+global_micro_batch_idx: 164
+global_micro_batch_idx: 167
+global_micro_batch_idx: 166
+global_micro_batch_idx: 169
+global_micro_batch_idx: 168
+global_micro_batch_idx: 171
+global_micro_batch_idx: 170
+global_micro_batch_idx: 173
+global_micro_batch_idx: 172
+global_micro_batch_idx: 175
+global_micro_batch_idx: 174
+global_micro_batch_idx: 177
+global_micro_batch_idx: 176
+global_micro_batch_idx: 179
+global_micro_batch_idx: 178
+global_micro_batch_idx: 181
+global_micro_batch_idx: 180
+global_micro_batch_idx: 183
+global_micro_batch_idx: 182
+global_micro_batch_idx: 185
+global_micro_batch_idx: 184
+global_micro_batch_idx: 187
+global_micro_batch_idx: 186
+global_micro_batch_idx: 189
+global_micro_batch_idx: 188
+global_micro_batch_idx: 191
+global_micro_batch_idx: 190
+global_micro_batch_idx: 193
+global_micro_batch_idx: 192
+global_micro_batch_idx: 195
+global_micro_batch_idx: 194
+global_micro_batch_idx: 197
+global_micro_batch_idx: 196
+global_micro_batch_idx: 199
+global_micro_batch_idx: 198
+global_micro_batch_idx: 201
+global_micro_batch_idx: 200
+global_micro_batch_idx: 203
+global_micro_batch_idx: 202
+global_micro_batch_idx: 205
+global_micro_batch_idx: 204
+global_micro_batch_idx: 207
+global_micro_batch_idx: 206
+global_micro_batch_idx: 209
+global_micro_batch_idx: 208
+global_micro_batch_idx: 211
+global_micro_batch_idx: 210
+global_micro_batch_idx: 213
+global_micro_batch_idx: 212
+global_micro_batch_idx: 215
+global_micro_batch_idx: 214
+global_micro_batch_idx: 217
+global_micro_batch_idx: 216
+global_micro_batch_idx: 219
+global_micro_batch_idx: 218
+global_micro_batch_idx: 221
+global_micro_batch_idx: 220
+global_micro_batch_idx: 223
+global_micro_batch_idx: 222
+global_micro_batch_idx: 225
+global_micro_batch_idx: 224
+global_micro_batch_idx: 227
+global_micro_batch_idx: 226
+global_micro_batch_idx: 228
+global_micro_batch_idx: 229
+global_micro_batch_idx: 231
+global_micro_batch_idx: 230
+global_micro_batch_idx: 233
+global_micro_batch_idx: 232
+global_micro_batch_idx: 235
+global_micro_batch_idx: 234
+global_micro_batch_idx: 237
+global_micro_batch_idx: 236
+global_micro_batch_idx: 239
+global_micro_batch_idx: 238
+global_micro_batch_idx: 241
+global_micro_batch_idx: 240
+global_micro_batch_idx: 243
+global_micro_batch_idx: 242
+global_micro_batch_idx: 245
+global_micro_batch_idx: 244
+global_micro_batch_idx: 247
+global_micro_batch_idx: 246
+global_micro_batch_idx: 249
+global_micro_batch_idx: 248
+global_micro_batch_idx: 251
+global_micro_batch_idx: 250
+global_micro_batch_idx: 253
+global_micro_batch_idx: 252
+global_micro_batch_idx: 255
+global_micro_batch_idx: 254
+2025-06-26 10:36:56.267	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:1017	INFO	[step=4/3,epoch=0]
+    train/masked_instances_local_rank=4.000
+    optim/total_grad_norm=3.163
+    train/CrossEntropyLoss=11.75
+    train/Perplexity=126,900
+    train/ZLoss=0.0140
+    throughput/total_tokens=8,388,608
+    throughput/total_training_Gflops=47,431,883
+    throughput/total_training_log_Gflops=17.67
+    throughput/device/tokens_per_second=13,123
+    throughput/device/batches_per_second=0.0125
+global_micro_batch_idx: 1
+global_micro_batch_idx: 0
+global_micro_batch_idx: 3
+global_micro_batch_idx: 2
+global_micro_batch_idx: 5
+global_micro_batch_idx: 4
+global_micro_batch_idx: 7
+global_micro_batch_idx: 6
+global_micro_batch_idx: 9
+global_micro_batch_idx: 8
+global_micro_batch_idx: 11
+global_micro_batch_idx: 10
+global_micro_batch_idx: 13
+global_micro_batch_idx: 12
+global_micro_batch_idx: 15
+global_micro_batch_idx: 14
+global_micro_batch_idx: 17
+global_micro_batch_idx: 16
+global_micro_batch_idx: 19
+global_micro_batch_idx: 18
+global_micro_batch_idx: 21
+global_micro_batch_idx: 20
+global_micro_batch_idx: 23
+global_micro_batch_idx: 22
+global_micro_batch_idx: 25
+global_micro_batch_idx: 24
+global_micro_batch_idx: 27
+global_micro_batch_idx: 26
+global_micro_batch_idx: 29
+global_micro_batch_idx: 28
+global_micro_batch_idx: 31
+global_micro_batch_idx: 30
+global_micro_batch_idx: 33
+global_micro_batch_idx: 32
+global_micro_batch_idx: 35
+global_micro_batch_idx: 34
+global_micro_batch_idx: 37
+global_micro_batch_idx: 36
+global_micro_batch_idx: 39
+global_micro_batch_idx: 38
+global_micro_batch_idx: 41
+global_micro_batch_idx: 40
+global_micro_batch_idx: 43
+global_micro_batch_idx: 42
+global_micro_batch_idx: 45
+global_micro_batch_idx: 44
+global_micro_batch_idx: 47
+global_micro_batch_idx: 46
+global_micro_batch_idx: 49
+global_micro_batch_idx: 48
+global_micro_batch_idx: 51
+global_micro_batch_idx: 50
+global_micro_batch_idx: 53
+global_micro_batch_idx: 52
+global_micro_batch_idx: 55
+global_micro_batch_idx: 54
+global_micro_batch_idx: 57
+global_micro_batch_idx: 56
+global_micro_batch_idx: 59
+global_micro_batch_idx: 58
+global_micro_batch_idx: 61
+global_micro_batch_idx: 60
+global_micro_batch_idx: 63
+global_micro_batch_idx: 62
+global_micro_batch_idx: 65
+global_micro_batch_idx: 64
+global_micro_batch_idx: 67
+global_micro_batch_idx: 66
+global_micro_batch_idx: 69
+global_micro_batch_idx: 68
+global_micro_batch_idx: 71
+global_micro_batch_idx: 70
+global_micro_batch_idx: 73
+global_micro_batch_idx: 72
+global_micro_batch_idx: 75
+global_micro_batch_idx: 74
+global_micro_batch_idx: 77
+global_micro_batch_idx: 76
+global_micro_batch_idx: 79
+global_micro_batch_idx: 78
+global_micro_batch_idx: 81
+global_micro_batch_idx: 80
+global_micro_batch_idx: 83
+global_micro_batch_idx: 82
+global_micro_batch_idx: 85
+global_micro_batch_idx: 84
+global_micro_batch_idx: 87
+global_micro_batch_idx: 86
+global_micro_batch_idx: 89
+global_micro_batch_idx: 88
+global_micro_batch_idx: 91
+global_micro_batch_idx: 90
+global_micro_batch_idx: 93
+global_micro_batch_idx: 92
+global_micro_batch_idx: 95
+global_micro_batch_idx: 94
+global_micro_batch_idx: 97
+global_micro_batch_idx: 96
+global_micro_batch_idx: 99
+global_micro_batch_idx: 98
+global_micro_batch_idx: 101
+global_micro_batch_idx: 100
+global_micro_batch_idx: 103
+global_micro_batch_idx: 102
+global_micro_batch_idx: 105
+global_micro_batch_idx: 104
+global_micro_batch_idx: 107
+global_micro_batch_idx: 106
+global_micro_batch_idx: 109
+global_micro_batch_idx: 108
+global_micro_batch_idx: 111
+global_micro_batch_idx: 110
+global_micro_batch_idx: 113
+global_micro_batch_idx: 112
+global_micro_batch_idx: 115
+global_micro_batch_idx: 114
+global_micro_batch_idx: 117
+global_micro_batch_idx: 116
+global_micro_batch_idx: 119
+global_micro_batch_idx: 118
+global_micro_batch_idx: 121
+global_micro_batch_idx: 120
+global_micro_batch_idx: 123
+global_micro_batch_idx: 122
+global_micro_batch_idx: 125
+global_micro_batch_idx: 124
+global_micro_batch_idx: 127
+global_micro_batch_idx: 126
+global_micro_batch_idx: 129
+global_micro_batch_idx: 128
+global_micro_batch_idx: 131
+global_micro_batch_idx: 130
+global_micro_batch_idx: 133
+global_micro_batch_idx: 132
+global_micro_batch_idx: 135
+global_micro_batch_idx: 134
+global_micro_batch_idx: 137
+global_micro_batch_idx: 136
+global_micro_batch_idx: 139
+global_micro_batch_idx: 138
+global_micro_batch_idx: 141
+global_micro_batch_idx: 140
+global_micro_batch_idx: 143
+global_micro_batch_idx: 142
+global_micro_batch_idx: 145
+global_micro_batch_idx: 144
+global_micro_batch_idx: 147
+global_micro_batch_idx: 146
+global_micro_batch_idx: 149
+global_micro_batch_idx: 148
+global_micro_batch_idx: 151
+global_micro_batch_idx: 150
+global_micro_batch_idx: 153
+global_micro_batch_idx: 152
+global_micro_batch_idx: 155
+global_micro_batch_idx: 154
+global_micro_batch_idx: 157
+global_micro_batch_idx: 156
+global_micro_batch_idx: 159
+global_micro_batch_idx: 158
+global_micro_batch_idx: 161
+global_micro_batch_idx: 160
+global_micro_batch_idx: 163
+global_micro_batch_idx: 162
+global_micro_batch_idx: 165
+global_micro_batch_idx: 164
+global_micro_batch_idx: 167
+global_micro_batch_idx: 166
+global_micro_batch_idx: 169
+global_micro_batch_idx: 168
+global_micro_batch_idx: 171
+global_micro_batch_idx: 170
+global_micro_batch_idx: 173
+global_micro_batch_idx: 172
+global_micro_batch_idx: 175
+global_micro_batch_idx: 174
+global_micro_batch_idx: 177
+global_micro_batch_idx: 176
+global_micro_batch_idx: 179
+global_micro_batch_idx: 178
+global_micro_batch_idx: 181
+global_micro_batch_idx: 180
+global_micro_batch_idx: 183
+global_micro_batch_idx: 182
+global_micro_batch_idx: 185
+global_micro_batch_idx: 184
+global_micro_batch_idx: 187
+global_micro_batch_idx: 186
+global_micro_batch_idx: 189
+global_micro_batch_idx: 188
+global_micro_batch_idx: 191
+global_micro_batch_idx: 190
+global_micro_batch_idx: 193
+global_micro_batch_idx: 192
+global_micro_batch_idx: 195
+global_micro_batch_idx: 194
+global_micro_batch_idx: 197
+global_micro_batch_idx: 196
+global_micro_batch_idx: 199
+global_micro_batch_idx: 198
+global_micro_batch_idx: 201
+global_micro_batch_idx: 200
+global_micro_batch_idx: 203
+global_micro_batch_idx: 202
+global_micro_batch_idx: 205
+global_micro_batch_idx: 204
+global_micro_batch_idx: 207
+global_micro_batch_idx: 206
+global_micro_batch_idx: 209
+global_micro_batch_idx: 208
+global_micro_batch_idx: 211
+global_micro_batch_idx: 210
+global_micro_batch_idx: 213
+global_micro_batch_idx: 212
+global_micro_batch_idx: 215
+global_micro_batch_idx: 214
+global_micro_batch_idx: 217
+global_micro_batch_idx: 216
+global_micro_batch_idx: 219
+global_micro_batch_idx: 218
+global_micro_batch_idx: 221
+global_micro_batch_idx: 220
+global_micro_batch_idx: 223
+global_micro_batch_idx: 222
+global_micro_batch_idx: 225
+global_micro_batch_idx: 224
+global_micro_batch_idx: 227
+global_micro_batch_idx: 226
+global_micro_batch_idx: 229
+global_micro_batch_idx: 228
+global_micro_batch_idx: 231
+global_micro_batch_idx: 230
+global_micro_batch_idx: 233
+global_micro_batch_idx: 232
+global_micro_batch_idx: 235
+global_micro_batch_idx: 234
+global_micro_batch_idx: 237
+global_micro_batch_idx: 236
+global_micro_batch_idx: 239
+global_micro_batch_idx: 238
+global_micro_batch_idx: 241
+global_micro_batch_idx: 240
+global_micro_batch_idx: 243
+global_micro_batch_idx: 242
+global_micro_batch_idx: 245
+global_micro_batch_idx: 244
+global_micro_batch_idx: 247
+global_micro_batch_idx: 246
+global_micro_batch_idx: 249
+global_micro_batch_idx: 248
+global_micro_batch_idx: 251
+global_micro_batch_idx: 250
+global_micro_batch_idx: 253
+global_micro_batch_idx: 252
+global_micro_batch_idx: 255
+global_micro_batch_idx: 254
+2025-06-26 10:38:16.178	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:1017	INFO	[step=5/3,epoch=0]
+    train/masked_instances_local_rank=4.000
+    optim/total_grad_norm=3.030
+    train/CrossEntropyLoss=11.79
+    train/Perplexity=131,704
+    train/ZLoss=0.0141
+    throughput/total_tokens=10,485,760
+    throughput/total_training_Gflops=59,289,854
+    throughput/total_training_log_Gflops=17.90
+    throughput/device/tokens_per_second=13,121
+    throughput/device/batches_per_second=0.0125
+global_micro_batch_idx: 1
+global_micro_batch_idx: 0
+global_micro_batch_idx: 3
+global_micro_batch_idx: 2
+global_micro_batch_idx: 5
+global_micro_batch_idx: 4
+global_micro_batch_idx: 7
+global_micro_batch_idx: 6
+global_micro_batch_idx: 9
+global_micro_batch_idx: 8
+global_micro_batch_idx: 11
+global_micro_batch_idx: 10
+global_micro_batch_idx: 13
+global_micro_batch_idx: 12
+global_micro_batch_idx: 15
+global_micro_batch_idx: 14
+global_micro_batch_idx: 17
+global_micro_batch_idx: 16
+global_micro_batch_idx: 19
+global_micro_batch_idx: 18
+global_micro_batch_idx: 21
+global_micro_batch_idx: 20
+global_micro_batch_idx: 23
+global_micro_batch_idx: 22
+global_micro_batch_idx: 25
+global_micro_batch_idx: 24
+global_micro_batch_idx: 27
+global_micro_batch_idx: 26
+global_micro_batch_idx: 29
+global_micro_batch_idx: 28
+global_micro_batch_idx: 31
+global_micro_batch_idx: 30
+global_micro_batch_idx: 33
+global_micro_batch_idx: 32
+global_micro_batch_idx: 35
+global_micro_batch_idx: 34
+global_micro_batch_idx: 37
+global_micro_batch_idx: 36
+global_micro_batch_idx: 39
+global_micro_batch_idx: 38
+global_micro_batch_idx: 41
+global_micro_batch_idx: 40
+global_micro_batch_idx: 43
+global_micro_batch_idx: 42
+global_micro_batch_idx: 45
+global_micro_batch_idx: 44
+global_micro_batch_idx: 47
+global_micro_batch_idx: 46
+global_micro_batch_idx: 49
+global_micro_batch_idx: 48
+global_micro_batch_idx: 51
+global_micro_batch_idx: 50
+global_micro_batch_idx: 53
+global_micro_batch_idx: 52
+global_micro_batch_idx: 55
+global_micro_batch_idx: 54
+global_micro_batch_idx: 57
+global_micro_batch_idx: 56
+global_micro_batch_idx: 59
+global_micro_batch_idx: 58
+global_micro_batch_idx: 61
+global_micro_batch_idx: 60
+global_micro_batch_idx: 63
+global_micro_batch_idx: 62
+global_micro_batch_idx: 65
+global_micro_batch_idx: 64
+global_micro_batch_idx: 67
+global_micro_batch_idx: 66
+global_micro_batch_idx: 69
+global_micro_batch_idx: 68
+global_micro_batch_idx: 71
+global_micro_batch_idx: 70
+global_micro_batch_idx: 73
+global_micro_batch_idx: 72
+global_micro_batch_idx: 75
+global_micro_batch_idx: 74
+global_micro_batch_idx: 77
+global_micro_batch_idx: 76
+global_micro_batch_idx: 79
+global_micro_batch_idx: 78
+global_micro_batch_idx: 81
+global_micro_batch_idx: 80
+global_micro_batch_idx: 83
+global_micro_batch_idx: 82
+global_micro_batch_idx: 85
+global_micro_batch_idx: 84
+global_micro_batch_idx: 87
+global_micro_batch_idx: 86
+global_micro_batch_idx: 89
+global_micro_batch_idx: 88
+global_micro_batch_idx: 91
+global_micro_batch_idx: 90
+global_micro_batch_idx: 93
+global_micro_batch_idx: 92
+global_micro_batch_idx: 95
+global_micro_batch_idx: 94
+global_micro_batch_idx: 97
+global_micro_batch_idx: 96
+global_micro_batch_idx: 99
+global_micro_batch_idx: 98
+global_micro_batch_idx: 101
+global_micro_batch_idx: 100
+global_micro_batch_idx: 103
+global_micro_batch_idx: 102
+global_micro_batch_idx: 105
+global_micro_batch_idx: 104
+global_micro_batch_idx: 107
+global_micro_batch_idx: 106
+global_micro_batch_idx: 109
+global_micro_batch_idx: 108
+global_micro_batch_idx: 111
+global_micro_batch_idx: 110
+global_micro_batch_idx: 113
+global_micro_batch_idx: 112
+global_micro_batch_idx: 115
+global_micro_batch_idx: 114
+global_micro_batch_idx: 117
+global_micro_batch_idx: 116
+global_micro_batch_idx: 119
+global_micro_batch_idx: 118
+global_micro_batch_idx: 121
+global_micro_batch_idx: 120
+global_micro_batch_idx: 123
+global_micro_batch_idx: 122
+global_micro_batch_idx: 125
+global_micro_batch_idx: 124
+global_micro_batch_idx: 127
+global_micro_batch_idx: 126
+global_micro_batch_idx: 129
+global_micro_batch_idx: 128
+global_micro_batch_idx: 131
+global_micro_batch_idx: 130
+global_micro_batch_idx: 133
+global_micro_batch_idx: 132
+global_micro_batch_idx: 135
+global_micro_batch_idx: 134
+global_micro_batch_idx: 137
+global_micro_batch_idx: 136
+global_micro_batch_idx: 139
+global_micro_batch_idx: 138
+global_micro_batch_idx: 141
+global_micro_batch_idx: 140
+global_micro_batch_idx: 143
+global_micro_batch_idx: 142
+global_micro_batch_idx: 145
+global_micro_batch_idx: 144
+global_micro_batch_idx: 147
+global_micro_batch_idx: 146
+global_micro_batch_idx: 149
+global_micro_batch_idx: 148
+global_micro_batch_idx: 151
+global_micro_batch_idx: 150
+global_micro_batch_idx: 153
+global_micro_batch_idx: 152
+global_micro_batch_idx: 155
+global_micro_batch_idx: 154
+global_micro_batch_idx: 157
+global_micro_batch_idx: 156
+global_micro_batch_idx: 159
+global_micro_batch_idx: 158
+global_micro_batch_idx: 161
+global_micro_batch_idx: 160
+global_micro_batch_idx: 163
+global_micro_batch_idx: 162
+global_micro_batch_idx: 165
+global_micro_batch_idx: 164
+global_micro_batch_idx: 167
+global_micro_batch_idx: 166
+global_micro_batch_idx: 169
+global_micro_batch_idx: 168
+global_micro_batch_idx: 171
+global_micro_batch_idx: 170
+global_micro_batch_idx: 173
+global_micro_batch_idx: 172
+global_micro_batch_idx: 175
+global_micro_batch_idx: 174
+global_micro_batch_idx: 177
+global_micro_batch_idx: 176
+global_micro_batch_idx: 179
+global_micro_batch_idx: 178
+global_micro_batch_idx: 181
+global_micro_batch_idx: 180
+global_micro_batch_idx: 183
+global_micro_batch_idx: 182
+global_micro_batch_idx: 185
+global_micro_batch_idx: 184
+global_micro_batch_idx: 187
+global_micro_batch_idx: 186
+global_micro_batch_idx: 189
+global_micro_batch_idx: 188
+global_micro_batch_idx: 191
+global_micro_batch_idx: 190
+global_micro_batch_idx: 193
+global_micro_batch_idx: 192
+global_micro_batch_idx: 195
+global_micro_batch_idx: 194
+global_micro_batch_idx: 197
+global_micro_batch_idx: 196
+global_micro_batch_idx: 199
+global_micro_batch_idx: 198
+global_micro_batch_idx: 201
+global_micro_batch_idx: 200
+global_micro_batch_idx: 203
+global_micro_batch_idx: 202
+global_micro_batch_idx: 205
+global_micro_batch_idx: 204
+global_micro_batch_idx: 207
+global_micro_batch_idx: 206
+global_micro_batch_idx: 209
+global_micro_batch_idx: 208
+global_micro_batch_idx: 211
+global_micro_batch_idx: 210
+global_micro_batch_idx: 213
+global_micro_batch_idx: 212
+global_micro_batch_idx: 215
+global_micro_batch_idx: 214
+global_micro_batch_idx: 217
+global_micro_batch_idx: 216
+global_micro_batch_idx: 219
+global_micro_batch_idx: 218
+global_micro_batch_idx: 221
+global_micro_batch_idx: 220
+global_micro_batch_idx: 223
+global_micro_batch_idx: 222
+global_micro_batch_idx: 225
+global_micro_batch_idx: 224
+global_micro_batch_idx: 227
+global_micro_batch_idx: 226
+global_micro_batch_idx: 229
+global_micro_batch_idx: 228
+global_micro_batch_idx: 231
+global_micro_batch_idx: 230
+global_micro_batch_idx: 233
+global_micro_batch_idx: 232
+global_micro_batch_idx: 235
+global_micro_batch_idx: 234
+global_micro_batch_idx: 237
+global_micro_batch_idx: 236
+global_micro_batch_idx: 239
+global_micro_batch_idx: 238
+global_micro_batch_idx: 241
+global_micro_batch_idx: 240
+global_micro_batch_idx: 243
+global_micro_batch_idx: 242
+global_micro_batch_idx: 245
+global_micro_batch_idx: 244
+global_micro_batch_idx: 247
+global_micro_batch_idx: 246
+global_micro_batch_idx: 249
+global_micro_batch_idx: 248
+global_micro_batch_idx: 251
+global_micro_batch_idx: 250
+global_micro_batch_idx: 253
+global_micro_batch_idx: 252
+global_micro_batch_idx: 255
+global_micro_batch_idx: 254
+2025-06-26 10:39:36.085	holygpu8a25406.rc.fas.harvard.edu:0	olmo.train:1017	INFO	[step=6/3,epoch=0]
+    train/masked_instances_local_rank=0
+    optim/total_grad_norm=3.143
+    train/CrossEntropyLoss=11.86
+    train/Perplexity=141,951
+    train/ZLoss=0.0142
+    throughput/total_tokens=12,582,912
+    throughput/total_training_Gflops=71,147,825
+    throughput/total_training_log_Gflops=18.08
+    throughput/device/tokens_per_second=13,122
+    throughput/device/batches_per_second=0.0125
+global_micro_batch_idx: 0
+global_micro_batch_idx: 1
+global_micro_batch_idx: 3
+global_micro_batch_idx: 2
+global_micro_batch_idx: 5
+global_micro_batch_idx: 4
+global_micro_batch_idx: 7
+global_micro_batch_idx: 6
+global_micro_batch_idx: 9
+global_micro_batch_idx: 8
+global_micro_batch_idx: 11
+global_micro_batch_idx: 10
+global_micro_batch_idx: 13
+global_micro_batch_idx: 12
+global_micro_batch_idx: 15
+global_micro_batch_idx: 14
+global_micro_batch_idx: 17
+global_micro_batch_idx: 16
+global_micro_batch_idx: 19
+global_micro_batch_idx: 18
+global_micro_batch_idx: 21
+global_micro_batch_idx: 20
+global_micro_batch_idx: 23
+global_micro_batch_idx: 22
+global_micro_batch_idx: 25
+global_micro_batch_idx: 24
+global_micro_batch_idx: 27
+global_micro_batch_idx: 26
+global_micro_batch_idx: 29
+global_micro_batch_idx: 28
+global_micro_batch_idx: 31
+global_micro_batch_idx: 30
+global_micro_batch_idx: 33
+global_micro_batch_idx: 32
+global_micro_batch_idx: 35
+global_micro_batch_idx: 34
+global_micro_batch_idx: 37
+global_micro_batch_idx: 36
+global_micro_batch_idx: 39
+global_micro_batch_idx: 38
+global_micro_batch_idx: 41
+global_micro_batch_idx: 40
+global_micro_batch_idx: 43
+global_micro_batch_idx: 42
+global_micro_batch_idx: 45
+global_micro_batch_idx: 44
+global_micro_batch_idx: 47
+global_micro_batch_idx: 46
+global_micro_batch_idx: 49
+global_micro_batch_idx: 48
+global_micro_batch_idx: 51
+global_micro_batch_idx: 50
+global_micro_batch_idx: 53
+global_micro_batch_idx: 52
+global_micro_batch_idx: 55
+global_micro_batch_idx: 54
+global_micro_batch_idx: 57
+global_micro_batch_idx: 56
+global_micro_batch_idx: 59
+global_micro_batch_idx: 58
+global_micro_batch_idx: 61
+global_micro_batch_idx: 60
+global_micro_batch_idx: 63
+global_micro_batch_idx: 62
+global_micro_batch_idx: 65
+global_micro_batch_idx: 64
+global_micro_batch_idx: 67
+global_micro_batch_idx: 66
+global_micro_batch_idx: 69
+global_micro_batch_idx: 68
+global_micro_batch_idx: 71
+global_micro_batch_idx: 70
+global_micro_batch_idx: 73
+global_micro_batch_idx: 72
+global_micro_batch_idx: 75
+global_micro_batch_idx: 74
+global_micro_batch_idx: 77
+global_micro_batch_idx: 76
+global_micro_batch_idx: 79
+global_micro_batch_idx: 78
+global_micro_batch_idx: 81
+global_micro_batch_idx: 80
+global_micro_batch_idx: 83
+global_micro_batch_idx: 82
+global_micro_batch_idx: 85
+global_micro_batch_idx: 84
+global_micro_batch_idx: 87
+global_micro_batch_idx: 86
+global_micro_batch_idx: 89
+global_micro_batch_idx: 88
+global_micro_batch_idx: 91
+global_micro_batch_idx: 90
+global_micro_batch_idx: 93
+global_micro_batch_idx: 92
+global_micro_batch_idx: 95
+global_micro_batch_idx: 94
+global_micro_batch_idx: 97
+global_micro_batch_idx: 96
+global_micro_batch_idx: 99
+global_micro_batch_idx: 98
+global_micro_batch_idx: 101
+global_micro_batch_idx: 100
+global_micro_batch_idx: 103
+global_micro_batch_idx: 102
+global_micro_batch_idx: 105
+global_micro_batch_idx: 104
+global_micro_batch_idx: 107
+global_micro_batch_idx: 106
+global_micro_batch_idx: 109
+global_micro_batch_idx: 108
+global_micro_batch_idx: 111
+global_micro_batch_idx: 110
+global_micro_batch_idx: 113
+global_micro_batch_idx: 112
+global_micro_batch_idx: 115
+global_micro_batch_idx: 114
+global_micro_batch_idx: 117
+global_micro_batch_idx: 116
+global_micro_batch_idx: 119
+global_micro_batch_idx: 118
+global_micro_batch_idx: 121
+global_micro_batch_idx: 120
+global_micro_batch_idx: 123
+global_micro_batch_idx: 122
+global_micro_batch_idx: 125
+global_micro_batch_idx: 124
+global_micro_batch_idx: 127
+global_micro_batch_idx: 126
+global_micro_batch_idx: 129
+global_micro_batch_idx: 128
+global_micro_batch_idx: 131
+global_micro_batch_idx: 130
+global_micro_batch_idx: 133
+global_micro_batch_idx: 132
+global_micro_batch_idx: 135
+global_micro_batch_idx: 134
+global_micro_batch_idx: 137
+global_micro_batch_idx: 136
+global_micro_batch_idx: 139
+global_micro_batch_idx: 138
+global_micro_batch_idx: 141
+global_micro_batch_idx: 140
+global_micro_batch_idx: 143
+global_micro_batch_idx: 142
+global_micro_batch_idx: 145
+global_micro_batch_idx: 144
+global_micro_batch_idx: 147
+global_micro_batch_idx: 146
+global_micro_batch_idx: 149
+global_micro_batch_idx: 148
+global_micro_batch_idx: 150
+global_micro_batch_idx: 151
+global_micro_batch_idx: 153
+global_micro_batch_idx: 152
+global_micro_batch_idx: 155
+global_micro_batch_idx: 154
+global_micro_batch_idx: 157
+global_micro_batch_idx: 156
+global_micro_batch_idx: 159
+global_micro_batch_idx: 158
+global_micro_batch_idx: 161
+global_micro_batch_idx: 160
+global_micro_batch_idx: 163
+global_micro_batch_idx: 162
+global_micro_batch_idx: 165
+global_micro_batch_idx: 164
+global_micro_batch_idx: 167
+global_micro_batch_idx: 166
+global_micro_batch_idx: 169
+global_micro_batch_idx: 168
+global_micro_batch_idx: 171
+global_micro_batch_idx: 170
+global_micro_batch_idx: 173
+global_micro_batch_idx: 172
+global_micro_batch_idx: 175
+global_micro_batch_idx: 174
+global_micro_batch_idx: 177
+global_micro_batch_idx: 176
+global_micro_batch_idx: 179
+global_micro_batch_idx: 178
+global_micro_batch_idx: 181
+global_micro_batch_idx: 180
+global_micro_batch_idx: 183
+global_micro_batch_idx: 182
+global_micro_batch_idx: 185
+global_micro_batch_idx: 184
+global_micro_batch_idx: 187
+global_micro_batch_idx: 186
+global_micro_batch_idx: 189
+global_micro_batch_idx: 188
+global_micro_batch_idx: 191
+global_micro_batch_idx: 190
+global_micro_batch_idx: 193
+global_micro_batch_idx: 192
+global_micro_batch_idx: 195
+global_micro_batch_idx: 194
+global_micro_batch_idx: 197
+global_micro_batch_idx: 196
+global_micro_batch_idx: 199
+global_micro_batch_idx: 198
+global_micro_batch_idx: 201
+global_micro_batch_idx: 200
+global_micro_batch_idx: 203
+global_micro_batch_idx: 202
+global_micro_batch_idx: 205
+global_micro_batch_idx: 204
+global_micro_batch_idx: 207
+global_micro_batch_idx: 206
+global_micro_batch_idx: 209
+global_micro_batch_idx: 208
+global_micro_batch_idx: 211
+global_micro_batch_idx: 210
+global_micro_batch_idx: 213
+global_micro_batch_idx: 212
+global_micro_batch_idx: 215
+global_micro_batch_idx: 214
+global_micro_batch_idx: 217
+global_micro_batch_idx: 216
