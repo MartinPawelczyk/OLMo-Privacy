@@ -8,8 +8,8 @@
 #SBATCH -v                              # make outout more verbose 
 #SBATCH --cpus-per-task=4               # Number of CPU cores per task
 #SBATCH --mem=80000
-#SBATCH -o myoutput_%j.out              # File to which STDOUT will be written, %j inserts jobid
-#SBATCH -e myerrors_%j.err              # File to which STDERR will be written, %j inserts jobid
+#SBATCH -o logs/myoutput_%j.out              # File to which STDOUT will be written, %j inserts jobid
+#SBATCH -e logs/myerrors_%j.err              # File to which STDERR will be written, %j inserts jobid
 #SBATCH --mail-user=martin.pawelczyk.1@gmail.com
 #SBATCH --account=sneel_lab
 
