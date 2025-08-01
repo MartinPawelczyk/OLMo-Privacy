@@ -4,15 +4,19 @@ import torch
 from torch.utils.data import DataLoader, DistributedSampler
 from torchmetrics import MeanMetric, Metric
 
-from ..config import EvaluatorConfig, EvaluatorType, TrainConfig
+
+from ..config import EvaluatorConfig, EvaluatorType, TrainConfig, PrivacyEvaluatorConfig # MP: added PrivacyEvaluatorConfig
 from ..exceptions import OLMoConfigurationError
 from ..tokenizer import Tokenizer
 from ..torch_util import get_global_rank, get_world_size
 from .downstream import ICLMetric, label_to_task_map
 from .evaluator import Evaluator
+from .gaussian_privacy import PrivacyEvaluator # MP: added PrivacyEvaluator
+
 
 __all__ = [
     "Evaluator",
+    "PrivacyEvaluator",  # MP: added PrivacyEvaluator
     "ICLMetric",
     "label_to_task_map",
     "build_downstream_evaluator",
@@ -72,10 +76,30 @@ def build_evaluator(
     train_config: TrainConfig, eval_config: EvaluatorConfig, tokenizer: Tokenizer, device: torch.device
 ) -> Evaluator:
     from ..data import build_eval_dataloader
+    # MP: added import
+    # Used for privacy evaluation
+    from ..data import build_train_dataloader
+    # MP: end
 
     if eval_config.type == EvaluatorType.downstream:
         # Downstream evaluation.
         return build_downstream_evaluator(train_config, eval_config, tokenizer, device)
+    # MP: added privacy evaluator
+    elif eval_config.type == EvaluatorType.privacy:
+        # Privacy downstream evaluation
+        # assert isinstance(eval_config, PrivacyEvaluatorConfig), "Evaluator type is 'privacy' but config is not PrivacyEvaluatorConfig"
+        
+        ## TODO: pass the correct config for training data
+        ## TODO: update: micro_device_batch_size = 1
+        train_loader = build_train_dataloader(train_config)
+
+        # Instantiate and return PrivacyEvaluator.
+        # Contains its own data loader and evaluation logic.
+        return PrivacyEvaluator(
+            data_loader=train_loader,
+            cfg=eval_config,
+        )
+        # MP: end
     elif eval_config.type == EvaluatorType.lm:
         # Language modeling evaluation.
         eval_loader = build_eval_dataloader(

@@ -29,6 +29,7 @@ from packaging import version
 from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader
+from torch.nn import CrossEntropyLoss
 
 from .aliases import PathOrStr
 from .checkpoint import Checkpointer, FullCheckpointer, build_sharded_checkpointer
@@ -42,7 +43,7 @@ from .config import (
     TrainConfig,
 )
 from .data import IterableDataset
-from .eval import Evaluator
+from .eval import Evaluator, PrivacyEvaluator
 from .exceptions import OLMoConfigurationError
 from .model import OLMo
 from .optim import Optimizer, Scheduler
@@ -1052,38 +1053,52 @@ class Trainer:
 
         eval_metrics = {}
         for evaluator in self.evaluators:
-            log.info(f"Running evaluation for '{evaluator.label}'...")
+            
+            if isinstance(evaluator, Evaluator): # Standard Evaluator (LM, downstream)
+                log.info(f"Running evaluation for '{evaluator.label}'...")
 
-            # Reset metrics.
-            evaluator.reset_metrics()
+                # Reset metrics.
+                evaluator.reset_metrics()
 
-            # Initialize data loader iterator.
-            eval_batches = iter(evaluator.eval_loader)
+                # Initialize data loader iterator.
+                eval_batches = iter(evaluator.eval_loader)
 
-            # Adjust how many batches to evaluate on.
-            num_eval_batches = (
-                evaluator.subset_num_batches
-                if evaluator.subset_num_batches is not None
-                else self.cfg.eval_subset_num_batches
-            )
-            if num_eval_batches > 0:
-                num_eval_batches = min(num_eval_batches, len(evaluator.eval_loader))
-                eval_batches = islice(eval_batches, num_eval_batches)
+                # Adjust how many batches to evaluate on.
+                num_eval_batches = (
+                    evaluator.subset_num_batches
+                    if evaluator.subset_num_batches is not None
+                    else self.cfg.eval_subset_num_batches
+                )
+                if num_eval_batches > 0:
+                    num_eval_batches = min(num_eval_batches, len(evaluator.eval_loader))
+                    eval_batches = islice(eval_batches, num_eval_batches)
 
-            # Run model over batches.
-            for eval_step, eval_batch in enumerate(eval_batches):
-                self.eval_step(eval_batch, evaluator)
+                # Run model over batches.
+                for eval_step, eval_batch in enumerate(eval_batches):
+                    self.eval_step(eval_batch, evaluator)
 
-                # Log to console.
-                if eval_step + 1 == num_eval_batches or (eval_step + 1) % self.cfg.console_log_interval == 0:
-                    log.info(f"[eval_step={eval_step + 1}/{num_eval_batches}]")
+                    # Log to console.
+                    if eval_step + 1 == num_eval_batches or (eval_step + 1) % self.cfg.console_log_interval == 0:
+                        log.info(f"[eval_step={eval_step + 1}/{num_eval_batches}]")
 
-            # Get final metrics.
-            metrics = evaluator.compute_metrics()
-            eval_metrics.update(metrics)
-            self.log_metrics_to_console(f"{evaluator.label}", metrics)
+                # Get final metrics.
+                metrics = evaluator.compute_metrics()
+                eval_metrics.update(metrics)
+                self.log_metrics_to_console(f"{evaluator.label}", metrics)
 
-            del eval_batches
+                del eval_batches
+            
+            # MP: Key Privacy Evaluation added here
+            elif isinstance(evaluator, PrivacyEvaluator):
+                log.info(f"Running privacy evaluation for '{evaluator.cfg.label}' risks...")
+                # Call the evaluate method directly
+                # Pass the model and train loader and compute privacy metrics
+                # we compute the dot product of the model and at the clean samples where the noise was applied during training with the corresponding noise
+                # these dot prodcuts are then all summed up and divided by the number of samples to get the average
+                # this is then used to compute the privacy metrics
+                privacy_metrics = self.gaussian_privacy_score()
+                # Log privacy specific metrics to console
+                self.log_metrics_to_console(f"{evaluator.cfg.label}", privacy_metrics)
 
         # Eval compiles a bunch more versions, and the result is terrible. This way we get back to zero.
         if self.cfg.compile is not None:
@@ -1145,6 +1160,7 @@ class Trainer:
 
     def fit(self, batches_to_noise: list = []) -> None:
         # MP: adjusted fit method to include batches_to_noise list
+        self.batches_to_noise = batches_to_noise
 
         if self.cfg.stop_after is not None:
             if self.cfg.stop_at is None:
@@ -1267,7 +1283,7 @@ class Trainer:
 
                     metrics = self.train_step(
                         batch,
-                        apply_noise=batch_id in batches_to_noise,
+                        apply_noise=batch_id in self.batches_to_noise,
                         reduce_global_loss=should_log_this_step
                         )
 
@@ -1440,3 +1456,216 @@ class Trainer:
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         del exc_val, exc_tb
         self.close(0 if exc_type is None else 1)
+
+    def _split_batch_eval(self, batch: Dict[str, Any], microbatch_size: int=1) -> List[Dict[str, Any]]:
+        batch_size = batch["input_ids"].shape[0]
+        if batch_size <= microbatch_size:
+            return [batch]
+        else:
+            micro_batches = {}
+            for key, value in batch.items():
+                if isinstance(value, torch.Tensor):
+                    micro_batches[key] = value.split(microbatch_size, dim=0)
+                elif isinstance(value, list):
+                    micro_batches[key] = [
+                        value[microbatch_size * i : microbatch_size * i + microbatch_size]
+                        for i in range(math.ceil(batch_size / microbatch_size))
+                    ]
+                else:
+                    raise ValueError(f"unexpected item in batch: '{key}={value}'")
+            return [
+                {key: value[i] for key, value in micro_batches.items()}  # type: ignore
+                for i in range(len(micro_batches["input_ids"]))
+            ]
+
+
+    def compute_causal_loss(self, pred_scores:torch.tensor, labels:torch.tensor) -> torch.tensor:
+        """ Computes the causal language modeling loss for a given set of prediction scores and labels.
+        Args:
+            pred_scores (torch.tensor): The prediction scores from the model, shape: (batch_size, sequence_length, vocab_size).
+            labels (torch.tensor): The ground truth labels, shape: (batch_size, sequence_length).
+        Returns:
+            torch.tensor: The computed loss value.
+        """
+        # https://github.com/huggingface/transformers/blob/v4.40.1/src/transformers/models/gpt_neox/modeling_gpt_neox.py#L1050
+        # we are doing next-token prediction; shift prediction scores and input ids by one
+        
+        shift_logits = pred_scores[:, :-1, :].contiguous()
+        labels = labels[:, 1:].contiguous()
+        loss_fct = CrossEntropyLoss()
+        lm_loss = loss_fct(shift_logits.view(-1, shift_logits.size(-1)), labels.view(-1))
+        return lm_loss
+
+    def _compute_dot(self, gradient: torch.tensor, noise: torch.tensor, n_std: float) -> torch.tensor:
+        """
+        Computes the dot product between gradients and Gaussian noise, normalized by the standard deviation.
+        
+        Args:
+            gradient: input gradients of loss with respect to input embeddings, shape: (batch_size, embedding_dim)
+            noise: Gaussian noise added to the input embeddings, shape: (batch_size, embedding_dim)
+            n_std: standard deviation of the Gaussian noise, a scalar
+        Returns:
+            torch.tensor: dot products of the gradients and noise, shape: (batch_size,)
+        """
+        # MP: must be double precision, otherwise overflow for large nets
+        gradient = gradient.to(torch.float64)
+        noise = noise.to(torch.float64)
+
+        dot_prods = (gradient*noise) / n_std
+        dot_prods = torch.sum(dot_prods, dim=1)
+        dot_prods = dot_prods / torch.norm(gradient, 2, dim=1)
+        dot_prods = dot_prods.detach()
+        return dot_prods
+
+
+    def _shorten_list(self, ordered_list: list, trainer_global_dataloader_batch_idx: int) -> list:
+        """
+        Shortens an ordered list to include only numbers less than a given batch index.
+
+        Args:
+            ordered_list: A list of numbers, assumed to be ordered.
+            trainer_global_dataloader_batch_idx: The threshold number.
+
+        Returns:
+            A new list containing only the numbers from the original list that are
+            less than trainer_global_dataloader_batch_idx.
+        """
+        shortened = []
+        for num in ordered_list:
+            if num <= trainer_global_dataloader_batch_idx:
+                shortened.append(num)
+            else:
+            # Since the list is ordered, once we encounter a number not less than
+            # the batch_idx, all subsequent numbers will also not be less than it.
+                break
+        return shortened
+
+
+    def gaussian_privacy_score(self) -> dict:
+        """ 
+        Computes the privacy score in a distributed setting, aggregating results from all GPUs.
+        """
+        # 1. SETUP: Determine if running in a distributed environment
+        is_distributed = dist.is_available() and dist.is_initialized()
+        world_size = get_world_size() if is_distributed else 1
+        rank = get_global_rank() if is_distributed else 0
+
+        # These will store results for batches processed ONLY on the current GPU (rank)
+        individual_dots_map = {}
+        individual_dots_test_map = {}
+
+        local_batches_to_noise = self._shorten_list(
+            self.batches_to_noise,
+            self.trainer_global_dataloader_batch_idx
+        )
+
+        assert len(local_batches_to_noise) > 0, "No batches to process for Gaussian Privacy Score."
+
+        # 2. LOCAL COMPUTATION: Each GPU processes its own data
+        with torch.enable_grad():
+            # The train_loader should use a DistributedSampler
+            for batch_id, batch in enumerate(self.train_loader):
+                if batch_id > local_batches_to_noise[-1]:
+                    break
+                if batch_id not in set(local_batches_to_noise):
+                    continue
+                
+                # Accumulate dot products for micro-batches of the current global batch
+                dots_for_this_batch = []
+                dots_test_for_this_batch = []
+
+                micro_batches = self.split_batch(batch)
+                for micro_batch_idx, micro_batch in enumerate(micro_batches):
+
+                    global_micro_batch_idx = micro_batch_idx * world_size + rank
+                    micro_batch = move_to_device(micro_batch, self.device)
+                    # Get input embeddings for the current micro-batch
+                    
+                    '''
+                    inputs_embeds = self.dist_model.get_input_embeddings(micro_batch['input_ids'])
+                    inputs_embeds.requires_grad_(True)
+                    '''
+                    
+                    with FSDP.summon_full_params(self.dist_model, rank0_only=False):
+                        # Get input embeddings for the current micro-batch
+                        inputs_embeds = self.dist_model.get_input_embeddings(micro_batch['input_ids'])
+                        inputs_embeds = inputs_embeds.to(torch.bfloat16)
+                        inputs_embeds.requires_grad_(True)
+
+                        # Forward pass and loss
+                        logits = self.dist_model(
+                            input_ids=micro_batch["input_ids"],
+                            input_embeddings=inputs_embeds,
+                            apply_noise=False,
+                        ).logits
+                        lm_loss = self.compute_causal_loss(logits, micro_batch['input_ids'])
+                      
+                        # Generate test noise
+                        torch.manual_seed(global_micro_batch_idx + 1000)
+                        test_noises = torch.randn_like(inputs_embeds) * self.cfg.model.noise_std
+
+                        # Gradients
+                        grads = torch.autograd.grad(lm_loss, inputs_embeds)[0].detach()
+                    
+                    # Generate original noise
+                    torch.manual_seed(global_micro_batch_idx)
+                    noises = torch.randn_like(inputs_embeds) * self.cfg.model.noise_std
+                    
+                    # Compute dot products
+                    dot = self._compute_dot(grads.flatten(1), noises.flatten(1), self.cfg.model.noise_std)
+                    dot_test = self._compute_dot(grads.flatten(1), test_noises.flatten(1), self.cfg.model.noise_std)
+                    
+                    dots_for_this_batch.append(dot)
+                    dots_test_for_this_batch.append(dot_test)
+
+                # After processing all micro-batches for the current global batch,
+                # calculate the mean dot product for this batch and store it in a map.
+                # Using a map with `batch_id` as key ensures correct ordering after gathering.
+                if dots_for_this_batch:
+                    individual_dots_map[batch_id] = torch.mean(torch.cat(dots_for_this_batch)).item()
+                    individual_dots_test_map[batch_id] = torch.mean(torch.cat(dots_test_for_this_batch)).item()
+
+        # 3. AGGREGATION: Gather results from all GPUs
+        gathered_individual_maps = [None] * world_size
+        gathered_individual_test_maps = [None] * world_size
+        if is_distributed:
+            # Wait for all processes to finish their local computations
+            dist.barrier()
+            # `all_gather_object` can handle arbitrary python objects (like our dicts)
+            dist.all_gather_object(gathered_individual_maps, individual_dots_map)
+            dist.all_gather_object(gathered_individual_test_maps, individual_dots_test_map)
+        else:
+            # If not distributed, the gathered list just contains the local results
+            gathered_individual_maps = [individual_dots_map]
+            gathered_individual_test_maps = [individual_dots_test_map]
+            
+        # 4. FINAL COMPUTATION: Process aggregated results on the main rank (rank 0)
+        if rank == 0:
+            # Merge the maps from all GPUs into a single map
+            final_individual_map = {}
+            for m in gathered_individual_maps:
+                final_individual_map.update(m)
+            
+            final_individual_test_map = {}
+            for m in gathered_individual_test_maps:
+                final_individual_test_map.update(m)
+                
+            # Sort by batch index to get the correct order of results
+            individual_dots = [final_individual_map[k] for k in sorted(final_individual_map.keys())]
+            individual_dots_test = [final_individual_test_map[k] for k in sorted(final_individual_test_map.keys())]
+
+            # Create dictionaries for the unpacked individual values
+            unpacked_individual_in = {f'GPS-Individual (IN) {i+1}': val for i, val in enumerate(individual_dots)}
+            unpacked_individual_out = {f'GPS-Individual (OUT) {i+1}': val for i, val in enumerate(individual_dots_test)}
+
+            # The final result is computed from the globally aggregated and ordered list
+            results = {
+                'GPS (IN)': torch.mean(torch.abs(torch.tensor(individual_dots))).item() if individual_dots else 0.0,
+                **unpacked_individual_in,
+                'GPS (OUT)': torch.mean(torch.abs(torch.tensor(individual_dots_test))).item() if individual_dots_test else 0.0,
+                **unpacked_individual_out
+            }
+            return results
+        else:
+            # Other ranks do not return anything
+            return {'Not a result': 0}

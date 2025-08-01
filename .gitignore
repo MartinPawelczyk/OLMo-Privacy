@@ -1,3 +1,9 @@
+# downloaded datasets
+data/
+
+# logs
+logs/
+
 # build artifacts
 
 .eggs/

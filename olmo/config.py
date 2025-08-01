@@ -679,6 +679,9 @@ class CustomDatasetConfig(BaseConfig):
 class EvaluatorType(StrEnum):
     downstream = "downstream"
     lm = "lm"
+    # MP: added privacy option
+    privacy = "privacy"
+    # MP: end
 
 
 @dataclass
@@ -689,6 +692,23 @@ class EvaluatorConfig(BaseConfig):
     device_eval_batch_size: Optional[int] = None
     subset_num_batches: Optional[int] = None
 
+# MP: added PrivacyEvaluatorConfig
+@dataclass
+class PrivacyEvaluatorConfig(EvaluatorConfig):
+    """
+    Configuration for a privacy evaluator.
+    This is a specialized evaluator that is used to evaluate the privacy of the model.
+    """
+
+    label: str
+    type: EvaluatorType = EvaluatorType.privacy
+    """
+    The type of the evaluator, which is set to 'privacy' for this configuration.
+    """
+    data: DataConfig = field(default_factory=DataConfig)
+    device_eval_batch_size: Optional[int] = None
+    subset_num_batches: Optional[int] = None
+# MP: end
 
 class TruncationDirection(StrEnum):
     right = "right"
@@ -1020,6 +1040,8 @@ class TrainConfig(BaseConfig):
     """
     Evaluation configurations.
     """
+
+    privacy_evaluator: Optional[PrivacyEvaluatorConfig] = None # New field for privacy
 
     eval_interval: int = 1000
     """

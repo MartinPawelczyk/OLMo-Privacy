@@ -1266,7 +1266,7 @@ class OLMo(nn.Module):
         last_logits_only: bool = False,
         output_hidden_states: Optional[bool] = None,
         doc_lens: Optional[torch.Tensor] = None,
-        max_doc_lens: Optional[Sequence[int]] = None,
+        max_doc_lens: Optional[Sequence[int]] = None
     ) -> OLMoOutput:
         """
         :param input_ids: A tensor of shape `(batch_size, seq_len)`.
@@ -1321,6 +1321,7 @@ class OLMo(nn.Module):
         # Get embeddings of input.
         # shape: (batch_size, seq_len, d_model)
         x = self.transformer.wte(input_ids) if input_embeddings is None else input_embeddings  # type: ignore
+        input_embeds = x.clone()  # type: ignore
 
         # Apply embedding layer norm.
         if self.config.embedding_layer_norm:
@@ -1464,10 +1465,10 @@ class OLMo(nn.Module):
             logits.mul_(1 / math.sqrt(self.config.d_model))
 
         return OLMoOutput(
-            logits=logits,
-            attn_key_values=attn_key_values,
-            hidden_states=tuple(all_hidden_states) if output_hidden_states else None,
-        )
+                logits=logits,
+                attn_key_values=attn_key_values,
+                hidden_states=tuple(all_hidden_states) if output_hidden_states else None,
+            )
 
     def get_fsdp_wrap_policy(self, wrap_strategy: Optional[FSDPWrapStrategy] = None):
         if wrap_strategy is None:
@@ -1905,6 +1906,8 @@ class OLMoWithNoise(OLMo):
             output_hidden_states: Optional[bool] = None,
             doc_lens: Optional[torch.Tensor] = None,
             max_doc_lens: Optional[Sequence[int]] = None,
+            # MP: to allow returning input embeddings as output
+            output_input_embeddings: bool = False
         ) -> OLMoOutput:
             """
             :param input_ids: A tensor of shape `(batch_size, seq_len)`.
@@ -1958,7 +1961,13 @@ class OLMoWithNoise(OLMo):
 
             # Get embeddings of input.
             # shape: (batch_size, seq_len, d_model)
-            x = self.transformer.wte(input_ids) if input_embeddings is None else input_embeddings  # type: ignore
+            if input_embeddings is None:
+                # print("Using wte to get input embeddings.")
+                # x = self.transformer.wte(input_ids)
+                x = self.transformer.wte.weight[input_ids] 
+            else:
+                print("Using provided input embeddings instead of wte.")
+                x = input_embeddings  # type: ignore
 
             # MP: Add Gaussian noise to the input embeddings.
             if apply_noise:
@@ -1966,7 +1975,13 @@ class OLMoWithNoise(OLMo):
                 print(f"Adding Gaussian noise to input embeddings with std {self.noise_std} and seed {micro_batch_idx}")
                 torch.manual_seed(micro_batch_idx)
                 noise = torch.randn_like(x) * self.noise_std
+                # if micro_batch_idx < 10:
+                    # Print first 10 values of the noise for debugging
+                    # print('Noise', noise[0, 0, :10])  
+                    # print('Input embeddings', x[0, 0, :10]) 
                 x = x + noise
+
+            input_embeds = x.clone()  # type: ignore
 
             # Apply embedding layer norm.
             if self.config.embedding_layer_norm:
@@ -2039,7 +2054,13 @@ class OLMoWithNoise(OLMo):
                         all_hidden_states.append(x)
 
                     layer_past = None if past_key_values is None else past_key_values[block_idx]
-                    if should_checkpoint_block(self.activation_checkpointing_strategy, block_idx):
+                    # MP: when input_embeddings is provided, we disable gradient checkpointing.
+                    # ############################# Why? #####################################
+                    # When input_embeddings is not None, then we compute input gradients using torch.autograd.grad(loss, input_embeddings)
+                    # But, if checkpointing were enabled, this would infere with the autograd graph. So we disable checkpointing here.
+                    # This is a quick and diry workaround, we should #TODO: fix this properly in the future
+                    # ########################################################################
+                    if should_checkpoint_block(self.activation_checkpointing_strategy, block_idx) and input_embeddings is None:
                         # shape: (batch_size, seq_len, d_model)
                         x, cache = self._activation_checkpoint_fn(
                             block,
@@ -2109,8 +2130,29 @@ class OLMoWithNoise(OLMo):
             if self.config.scale_logits:
                 logits.mul_(1 / math.sqrt(self.config.d_model))
 
-            return OLMoOutput(
-                logits=logits,
-                attn_key_values=attn_key_values,
-                hidden_states=tuple(all_hidden_states) if output_hidden_states else None,
-            )
+            if output_input_embeddings:
+                return input_embeds, OLMoOutput(
+                    logits=logits,
+                    attn_key_values=attn_key_values,
+                    hidden_states=tuple(all_hidden_states) if output_hidden_states else None,
+                ).logits
+            else:
+                return OLMoOutput(
+                    logits=logits,
+                    attn_key_values=attn_key_values,
+                    hidden_states=tuple(all_hidden_states) if output_hidden_states else None,
+                )
+    
+    def get_input_embeddings(self, input_ids: torch.LongTensor) -> torch.FloatTensor:
+        """
+        Get the input embeddings for the given input IDs.
+        """
+
+        # Make sure these embeddings track gradients from this point onwards.
+        # This makes 'inputs_embeds' a leaf node with respect to subsequent
+        # gradient computations.
+
+        # return self.transformer.wte(input_ids).requires_grad_(True)
+        input_embeddings = self.transformer.wte.weight[input_ids].detach().requires_grad_(True)
+        return input_embeddings
+    # MP: End of OLMoWithNoise class
