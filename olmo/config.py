@@ -474,18 +474,21 @@ class ModelConfig(BaseConfig):
     Apply norm after the attention/feedforward layers rather than before, as introduced in the Swin transformer paper (Liu et al).
     """
 
-    # MP added
+    ### BEGIN GAUSSIAN POISONING 
     batches_to_noise: List[int] = field(default_factory=list)
+    ### END GAUSSIAN POISONING 
 
     """
     A list of indices that indicate which batches to apply noise to.
     """
 
+    ### BEGIN GAUSSIAN POISONING 
     noise_std: float = 1e-3
     """
     The standard deviation of the Gaussian noise to apply to the model embeddings
     """
-    # MP end
+    ### END GAUSSIAN POISONING 
+
 
     @property
     def effective_n_kv_heads(self) -> int:
@@ -679,9 +682,10 @@ class CustomDatasetConfig(BaseConfig):
 class EvaluatorType(StrEnum):
     downstream = "downstream"
     lm = "lm"
+    ### BEGIN GAUSSIAN POISONING 
     # MP: added privacy option
     privacy = "privacy"
-    # MP: end
+    ### END GAUSSIAN POISONING 
 
 
 @dataclass
@@ -692,6 +696,7 @@ class EvaluatorConfig(BaseConfig):
     device_eval_batch_size: Optional[int] = None
     subset_num_batches: Optional[int] = None
 
+### BEGIN GAUSSIAN POISONING 
 # MP: added PrivacyEvaluatorConfig
 @dataclass
 class PrivacyEvaluatorConfig(EvaluatorConfig):
@@ -708,7 +713,7 @@ class PrivacyEvaluatorConfig(EvaluatorConfig):
     data: DataConfig = field(default_factory=DataConfig)
     device_eval_batch_size: Optional[int] = None
     subset_num_batches: Optional[int] = None
-# MP: end
+### END GAUSSIAN POISONING 
 
 class TruncationDirection(StrEnum):
     right = "right"

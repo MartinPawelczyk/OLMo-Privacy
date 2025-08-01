@@ -1,3 +1,4 @@
+### BEGIN GAUSSIAN POISONING (added imports and privacy evaluator option)
 from typing import Dict, List, Union
 
 import torch
@@ -71,33 +72,21 @@ def build_downstream_evaluator(
     )
     return evaluator
 
-
+### BEGIN GAUSSIAN POISONING 
+# MP: added build_evaluator function to handle different evaluator types including PrivacyEvaluator
 def build_evaluator(
     train_config: TrainConfig, eval_config: EvaluatorConfig, tokenizer: Tokenizer, device: torch.device
 ) -> Evaluator:
     from ..data import build_eval_dataloader
-    # MP: added import
-    # Used for privacy evaluation
-    from ..data import build_train_dataloader
-    # MP: end
 
     if eval_config.type == EvaluatorType.downstream:
         # Downstream evaluation.
         return build_downstream_evaluator(train_config, eval_config, tokenizer, device)
-    # MP: added privacy evaluator
+    # MP: added privacy evaluator to be consistent with other evaluators in eval step.
     elif eval_config.type == EvaluatorType.privacy:
-        # Privacy downstream evaluation
-        # assert isinstance(eval_config, PrivacyEvaluatorConfig), "Evaluator type is 'privacy' but config is not PrivacyEvaluatorConfig"
-        
-        ## TODO: pass the correct config for training data
-        ## TODO: update: micro_device_batch_size = 1
-        train_loader = build_train_dataloader(train_config)
-
-        # Instantiate and return PrivacyEvaluator.
-        # Contains its own data loader and evaluation logic.
+        # Instantiate and return PrivacyEvaluator object. Only used as a flag in eval loop.
         return PrivacyEvaluator(
-            data_loader=train_loader,
-            cfg=eval_config,
+            cfg=eval_config
         )
         # MP: end
     elif eval_config.type == EvaluatorType.lm:
@@ -128,7 +117,7 @@ def build_evaluator(
         )
     else:
         raise ValueError(f"Unexpected evaluator type '{eval_config.type}'")
-
+### END GAUSSIAN POISONING 
 
 def build_evaluators(cfg: TrainConfig, device: torch.device) -> List[Evaluator]:
     evaluators = []

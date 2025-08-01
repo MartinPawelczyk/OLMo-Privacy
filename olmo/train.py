@@ -745,9 +745,11 @@ class Trainer:
             attention_bias=batch.get("attention_bias"),
             doc_lens=batch.get("doc_lens"),
             max_doc_lens=batch.get("max_doc_lens"),
+            ### BEGIN GAUSSIAN POISONING 
             # MP: added micro-batch index & apply noise
             micro_batch_idx=micro_batch_idx,
             apply_noise=apply_noise
+            ### END GAUSSIAN POISONING
         ).logits
         logits_for_loss = logits[..., :-1, :].contiguous()
         # shape: (batch_size * seq_len, vocab_size)
@@ -776,11 +778,11 @@ class Trainer:
             micro_batch, 
             compute_z_loss=self.cfg.softmax_auxiliary_loss, 
             loss_reduction="sum",
+            ### BEGIN GAUSSIAN POISONING 
             # MP: adjusted forward pass to include micro-batch index and apply noise
             micro_batch_idx=micro_batch_idx,
             apply_noise=apply_noise,
-            # seed_offset=self.cfg.global_train_batch_size + self.cfg.device_train_microbatch_size
-            # MP : end
+            ### END GAUSSIAN POISONING 
         )
         ce_loss = ce_loss / batch_size_in_tokens
 
@@ -800,6 +802,7 @@ class Trainer:
         return loss, ce_loss, z_loss
 
     def train_batch(self, batch: Dict[str, Any], apply_noise: bool) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
+        ### BEGIN GAUSSIAN POISONING 
         ## MP: adjusted train batch to include apply_noise parameter as well as micro-batch index
         
         # Split into micro-batches.
@@ -819,7 +822,7 @@ class Trainer:
             # This is used to ensure that each micro-batch has a unique index across all GPUs
             # and to ensure that the noise is applied consistently across all micro-batches.
             global_micro_batch_idx = (
-                        micro_batch_idx * get_world_size()  +      # Offset by this epoch's previous global batches
+                        micro_batch_idx * get_world_size()  +      # Offset
                         get_global_rank()                          # Add the rank to ensure uniqueness across GPUs within a global batch
                     )
 
@@ -862,10 +865,11 @@ class Trainer:
             # Remove output hooks
             for hook in output_hooks:
                 hook.remove()
-
+        ### END GAUSSIAN POISONING 
         return ce_batch_loss, z_batch_loss
 
     def train_step(self, batch: Dict[str, Any], apply_noise: bool, reduce_global_loss: bool = True) -> Dict[str, float]:
+        ### BEGIN GAUSSIAN POISONING 
         # MP: adjusted train step to include apply_noise parameter
         
         metrics: Dict[str, float] = {}
@@ -886,6 +890,7 @@ class Trainer:
         batch = move_to_device(batch, self.device)
 
         # Run forward-backward pass.
+        # MP: added apply_noise parameter to train_batch
         ce_batch_loss, z_batch_loss = self.train_batch(batch, apply_noise)
 
         # Collect loss, potentially reducing over all ranks.
@@ -946,7 +951,7 @@ class Trainer:
             )
             for key, value in optim_metrics.items():
                 metrics[f"optim/{key}"] = value.item()
-
+        ### END GAUSSIAN POISONING 
         return metrics
 
     def eval_batch(self, batch: Dict[str, Any]) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -1047,6 +1052,7 @@ class Trainer:
             return False
 
     def eval(self) -> Dict[str, Any]:
+        ### BEGIN GAUSSIAN POISONING 
         # Zero gradients and set model to 'eval' mode.
         self.optim.zero_grad(set_to_none=True)
         self.dist_model.eval()
@@ -1091,11 +1097,14 @@ class Trainer:
             # MP: Key Privacy Evaluation added here
             elif isinstance(evaluator, PrivacyEvaluator):
                 log.info(f"Running privacy evaluation for '{evaluator.cfg.label}' risks...")
-                # Call the evaluate method directly
-                # Pass the model and train loader and compute privacy metrics
-                # we compute the dot product of the model and at the clean samples where the noise was applied during training with the corresponding noise
-                # these dot prodcuts are then all summed up and divided by the number of samples to get the average
-                # this is then used to compute the privacy metrics
+                # Call the evaluate method directly from within the trainer class since we need access to model's training setup.
+                # Computes and input gradients of loss for individual training examples.
+                # Computes dot products of loss gradients (with respect to the model's input embeddings) and Gaussian noise added to the clean input embeddings.
+                # This is essentially computes the correlation between the noise and the model and analyzes the privacy risk of the model with respect to the Gaussian noise added to the input embeddings.
+                # These dot prodcuts are then all summed up and divided by the number of samples to get the average.
+                # This is the Gaussian Privacy Score from "Pawelczyk et al. (2025); Machine unlearning Fails to Remove Data Poisoning Attacks; ICLR 2025".
+                # This is then used to compute the privacy metrics.
+                
                 privacy_metrics = self.gaussian_privacy_score()
                 # Log privacy specific metrics to console
                 self.log_metrics_to_console(f"{evaluator.cfg.label}", privacy_metrics)
@@ -1103,7 +1112,7 @@ class Trainer:
         # Eval compiles a bunch more versions, and the result is terrible. This way we get back to zero.
         if self.cfg.compile is not None:
             torch.compiler.reset()
-
+        ### END GAUSSIAN POISONING 
         return eval_metrics
 
     def check_if_cancelled(self) -> Tuple[bool, int]:
@@ -1159,6 +1168,7 @@ class Trainer:
         return run_canceled, extra_steps
 
     def fit(self, batches_to_noise: list = []) -> None:
+        ### BEGIN GAUSSIAN POISONING 
         # MP: adjusted fit method to include batches_to_noise list
         self.batches_to_noise = batches_to_noise
 
@@ -1436,7 +1446,8 @@ class Trainer:
                 log.info("Saving final checkpoint...")
                 checkpoint_path, _ = self.save_checkpoint(CheckpointType.sharded)
                 log.info(f"Checkpoint saved to {checkpoint_path}")
-
+        ### END GAUSSIAN POISONING 
+    
     def close(self, exit_code: int = 0) -> None:
         gc_cuda()
 
@@ -1478,7 +1489,8 @@ class Trainer:
                 for i in range(len(micro_batches["input_ids"]))
             ]
 
-
+    ### BEGIN GAUSSIAN POISONING (From here until end of file!)
+    # MP: added additional methods for Gaussian Privacy Score computation
     def compute_causal_loss(self, pred_scores:torch.tensor, labels:torch.tensor) -> torch.tensor:
         """ Computes the causal language modeling loss for a given set of prediction scores and labels.
         Args:
@@ -1507,7 +1519,7 @@ class Trainer:
         Returns:
             torch.tensor: dot products of the gradients and noise, shape: (batch_size,)
         """
-        # MP: must be double precision, otherwise overflow for large nets
+        # MP: must be double precision
         gradient = gradient.to(torch.float64)
         noise = noise.to(torch.float64)
 
@@ -1581,11 +1593,6 @@ class Trainer:
                     micro_batch = move_to_device(micro_batch, self.device)
                     # Get input embeddings for the current micro-batch
                     
-                    '''
-                    inputs_embeds = self.dist_model.get_input_embeddings(micro_batch['input_ids'])
-                    inputs_embeds.requires_grad_(True)
-                    '''
-                    
                     with FSDP.summon_full_params(self.dist_model, rank0_only=False):
                         # Get input embeddings for the current micro-batch
                         inputs_embeds = self.dist_model.get_input_embeddings(micro_batch['input_ids'])
@@ -1600,7 +1607,7 @@ class Trainer:
                         ).logits
                         lm_loss = self.compute_causal_loss(logits, micro_batch['input_ids'])
                       
-                        # Generate test noise
+                        # Generate test noise (offset=1000 is harded coded)
                         torch.manual_seed(global_micro_batch_idx + 1000)
                         test_noises = torch.randn_like(inputs_embeds) * self.cfg.model.noise_std
 
@@ -1668,4 +1675,5 @@ class Trainer:
             return results
         else:
             # Other ranks do not return anything
-            return {'Not a result': 0}
+            return {'Not a result': 0.0}
+    ### END GAUSSIAN POISONING 

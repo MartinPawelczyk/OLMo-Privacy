@@ -1883,7 +1883,8 @@ class OLMo(nn.Module):
 
         return state_dict, og_keys_to_new
 
-
+### BEGIN GAUSSIAN POISONING 
+# MP: Added additional model class until end of file
 class OLMoWithNoise(OLMo):
     def __init__(self, config: ModelConfig):
         super().__init__(config)
@@ -2151,8 +2152,7 @@ class OLMoWithNoise(OLMo):
         # Make sure these embeddings track gradients from this point onwards.
         # This makes 'inputs_embeds' a leaf node with respect to subsequent
         # gradient computations.
-
-        # return self.transformer.wte(input_ids).requires_grad_(True)
         input_embeddings = self.transformer.wte.weight[input_ids].detach().requires_grad_(True)
         return input_embeddings
     # MP: End of OLMoWithNoise class
+    ### END GAUSSIAN POISONING 

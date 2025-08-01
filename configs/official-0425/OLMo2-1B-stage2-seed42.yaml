@@ -40,9 +40,11 @@ model:
   init_std: 0.02
   init_cutoff_factor: 3
 
+  ### BEGIN GAUSSIAN POISONING 
   # MP: Gaussian Noise Parameters here
   batches_to_noise: [0]  # which batches we apply Gaussian noise to
   noise_std: 5e-1
+  ### END GAUSSIAN POISONING 
 
 softmax_auxiliary_loss: true
 auxiliary_loss_multiplier: 1e-5
@@ -148,9 +150,10 @@ evaluators:
   ##########################
   ## Privacy  evaluations ##
   ##########################
-
+  ### BEGIN GAUSSIAN POISONING 
   - label: gaussian_privacy
     type: privacy
+  ### END GAUSSIAN POISONING 
 
   ##########################
   # Downstream evaluations #

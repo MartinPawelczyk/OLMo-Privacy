@@ -26,7 +26,9 @@ from olmo.config import (
 from olmo.data import build_train_dataloader
 from olmo.eval import build_evaluators
 from olmo.exceptions import OLMoCliError, OLMoConfigurationError
+### BEGIN GAUSSIAN POISONING 
 from olmo.model import OLMo, OLMoWithNoise
+### END GAUSSIAN POISONING 
 from olmo.optim import BoltOnWarmupScheduler, build_optimizer, build_scheduler
 from olmo.torch_util import (
     SingleAccelerator,
@@ -137,7 +139,9 @@ def main(cfg: TrainConfig) -> None:
 
     # Initialize the model.
     log.info("Building model...")
+    ### BEGIN GAUSSIAN POISONING 
     olmo_model = OLMoWithNoise(cfg.model)
+    ### END GAUSSIAN POISONING 
     log.info(f"Total number of parameters: {olmo_model.num_params():,d}")
     log.info(f"Number of non-embedding parameters: {olmo_model.num_params(include_embedding=False):,d}")
     log.info(f"Peak GPU Memory (MB) before {cfg.distributed_strategy}: {int(peak_gpu_memory() or 0)}")
@@ -150,7 +154,7 @@ def main(cfg: TrainConfig) -> None:
             block.compile(**cfg.compile.asdict())
 
     print(cfg.activation_checkpointing)
-    # MP: explicity added "strategy" here
+    # MP
     # led to weird error and commented for now
     # olmo_model.set_activation_checkpointing(strategy=cfg.activation_checkpointing)
 
@@ -376,7 +380,9 @@ def main(cfg: TrainConfig) -> None:
 
         if not cfg.dry_run:
             log.info("Starting training...")
+            ### BEGIN GAUSSIAN POISONING
             trainer.fit(batches_to_noise=cfg.model.batches_to_noise)
+            ### END GAUSSIAN POISONING 
             log.info("Training complete")
         else:
             log.info("Dry run complete")
