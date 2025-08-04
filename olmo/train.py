@@ -30,8 +30,8 @@ from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader
 from torch.nn import CrossEntropyLoss
-from torch.distributions.studentT import StudentT
 ### BEGIN GAUSSIAN POISONING
+from torch.distributions.studentT import StudentT
 from torch.distributions.normal import Normal
 ### END GAUSSIAN POISONING 
 
